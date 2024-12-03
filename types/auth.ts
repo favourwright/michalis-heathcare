@@ -3,6 +3,7 @@ import {
   PublicKeyCredentialCreationOptionsJSON,
   CredentialDeviceType,
   AuthenticatorTransportFuture,
+  RegistrationResponseJSON,
 } from '@simplewebauthn/types'
 import { Timestamp } from 'firebase/firestore';
 
@@ -37,3 +38,14 @@ export type Passkey = {
   // Ex: ['ble' | 'cable' | 'hybrid' | 'internal' | 'nfc' | 'smart-card' | 'usb']
   transports?: AuthenticatorTransportFuture[];
 };
+
+export type PreferredAuthNIdentifierTypes = 'email' | 'username'
+export type Identifier = {
+  type: PreferredAuthNIdentifierTypes
+  value: string
+}
+export type ChallengeGenerationDTO = Identifier
+export type ChallengeVerifiicationDTO = {
+  identifier: Identifier
+  response: RegistrationResponseJSON
+}

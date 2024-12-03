@@ -4,23 +4,40 @@ import {
   verifyRegistrationResponse,
   VerifyRegistrationResponseOpts,
 } from '@simplewebauthn/server';
-import { fetchUserDetailsByEmail, addNewPasskey, updateAuthNOptions } from '@/actions/firestore/auth';
-import { Passkey } from '@/types/auth';
+import { addNewPasskey } from '@/actions/firestore/auth';
+import { ChallengeVerifiicationDTO, Passkey } from '@/types/auth';
+import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
-  const data = await request.json() as { email: string, response: any };
+  const data = await request.json() as ChallengeVerifiicationDTO
   const rpID = process.env.AUTHN_RP_ID!;
   const expectedOrigin = process.env.AUTHN_ORIGIN!;
-  const email = data.email;
+  const identifier = data.identifier;
   const response = data.response;
-  const userData = (await fetchUserDetailsByEmail(email));
+  const optionsCookie = request.cookies.get('options')
+
+  let parsedOptionsObj:PublicKeyCredentialCreationOptionsJSON
+  try {
+    parsedOptionsObj = JSON.parse(optionsCookie?.value!) as PublicKeyCredentialCreationOptionsJSON
+  } catch (error) {
+    return NextResponse.json(
+      { message: error },
+      { status: 400 }
+    );
+  }
+  if (!parsedOptionsObj) {
+    return NextResponse.json(
+      { message: 'Error verifying registration' },
+      { status: 400 }
+    );
+  }
 
   const opts: VerifyRegistrationResponseOpts = {
     response,
     expectedOrigin,
     expectedRPID: rpID,
     requireUserVerification: false, // Enforce user verification by the authenticator
-    expectedChallenge: userData?.options?.challenge!,
+    expectedChallenge: parsedOptionsObj?.challenge!,
   };
 
   let verification: VerifiedRegistrationResponse;
@@ -49,9 +66,9 @@ export async function POST(request: NextRequest) {
 
   const newPasskey: Passkey = {
     // `user` here is from Step 2
-    user: email,
+    user: identifier.value,
     // Created by `generateRegistrationOptions()` in Step 1
-    webauthnUserID: userData?.options?.user.id!,
+    webauthnUserID: parsedOptionsObj?.user.id!,
     // A unique identifier for the credential
     id: credential.id,
     // The public key bytes, used for subsequent authentication signature verification
@@ -66,8 +83,9 @@ export async function POST(request: NextRequest) {
     backedUp: credentialBackedUp,
   };
 
-  await addNewPasskey(email, newPasskey);
-  await updateAuthNOptions(email, null);
+  await addNewPasskey(identifier.value, newPasskey);
+  // remove the options cookie
+  (await cookies()).delete('options')
 
   return NextResponse.json({
     message: 'Success',

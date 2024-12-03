@@ -5,8 +5,9 @@ import {
   useVerifyChallenge,
 } from '@/hooks/useRegistration';
 import { startRegistration } from '@simplewebauthn/browser';
+import { RegistrationResponseJSON } from '@simplewebauthn/types';
 
-export const signChallenge = async (optionsJSON: any) => {
+export const signChallenge = async (optionsJSON: any):Promise<RegistrationResponseJSON> => {
   try {
     const res = await startRegistration({ optionsJSON });
     return res
@@ -32,11 +33,10 @@ export default function Home() {
 
         // Proceed to verify the challenge
         verifyChallenge(
-          { email: response?.data?.email, response: signedResponse },
+          { email: response?.data?.identifier, response: signedResponse },
           {
             onSuccess: (verifyData) => {
               console.log('Challenge verified successfully:', verifyData);
-              // Handle post-verification logic, e.g., redirect or show a success message
             },
             onError: (verifyError) => {
               console.error('Verification failed:', verifyError);

@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     AUTHN_RP_ID: process.env.AUTHN_RP_ID,
-    AUTHN_ORIGIN: process.env.AUTHN_RP_ID ? `https://${process.env.AUTHN_RP_ID}` : 'http://localhost:3000',
+    AUTHN_ORIGIN: process.env.AUTHN_RP_ID === 'localhost' ? 'http://localhost:3000' : `https://${process.env.AUTHN_RP_ID}`
   }
 };
 

@@ -3,13 +3,13 @@ import { useState } from 'react';
 import {
   useChallenge,
   useVerifyChallenge,
-} from '@/hooks/useRegistration';
-import { startRegistration } from '@simplewebauthn/browser';
-import { RegistrationResponseJSON } from '@simplewebauthn/types';
+} from '@/hooks/usePasskeyVerification';
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
+import { AuthenticationResponseJSON, RegistrationResponseJSON } from '@simplewebauthn/types';
 
-export const signChallenge = async (optionsJSON: any):Promise<RegistrationResponseJSON> => {
+export const signChallenge = async (optionsJSON: any):Promise<AuthenticationResponseJSON> => {
   try {
-    const res = await startRegistration({ optionsJSON });
+    const res = await startAuthentication({ optionsJSON });
     return res
   } catch (error: any) {
     console.log({challengeSignupError: error})

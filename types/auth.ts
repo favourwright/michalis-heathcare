@@ -4,13 +4,15 @@ import {
   CredentialDeviceType,
   AuthenticatorTransportFuture,
   RegistrationResponseJSON,
+  AuthenticationResponseJSON,
+  WebAuthnCredential,
 } from '@simplewebauthn/types'
 import { Timestamp } from 'firebase/firestore';
 
 export type UserData = {
   email: string
   name: string
-  passKeys: PublicKeyCredentialDescriptorJSON[]
+  passKeys: PublicKeyCredentialDescriptorJSON[] | WebAuthnCredential[]
   options: PublicKeyCredentialCreationOptionsJSON
   updatedAt: Timestamp
 }
@@ -44,8 +46,12 @@ export type Identifier = {
   type: PreferredAuthNIdentifierTypes
   value: string
 }
-export type ChallengeGenerationDTO = Identifier
-export type ChallengeVerifiicationDTO = {
+export type ChallengeDTO = Identifier
+export type RegistrationChallengeVerifiicationDTO = {
   identifier: Identifier
   response: RegistrationResponseJSON
+}
+export type AuthenticationChallengeVerifiicationDTO = {
+  identifier: Identifier
+  response: AuthenticationResponseJSON
 }

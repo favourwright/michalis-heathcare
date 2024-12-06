@@ -5,10 +5,10 @@ import {
 } from '@simplewebauthn/server';
 import { fetchUserDetails } from '@/actions/firestore/auth';
 import { cookies } from 'next/headers';
-import { ChallengeGenerationDTO } from '@/types/auth';
+import { ChallengeDTO } from '@/types/auth';
 
 export async function POST(request: NextRequest) {
-  const data = await request.json() as {identifier: ChallengeGenerationDTO}
+  const data = await request.json() as {identifier: ChallengeDTO}
   const rpID = process.env.AUTHN_RP_ID!;
   const rpName = process.env.APP_NAME!;
   const identifier = data.identifier;

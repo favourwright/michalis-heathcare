@@ -1,13 +1,13 @@
-import { ChallengeGenerationDTO, ChallengeVerifiicationDTO } from '@/types/auth';
+import { ChallengeDTO, AuthenticationChallengeVerifiicationDTO } from '@/types/auth';
 import { RegistrationResponseJSON } from '@simplewebauthn/types';
 import { useMutation } from '@tanstack/react-query';
 
 export const fetchChallenge = async (email: string): Promise<any> => {
-  const identifier: ChallengeGenerationDTO = {
+  const identifier: ChallengeDTO = {
     type: 'email',
     value: email
   }
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch('/api/auth/passkey/register', {
     method: 'POST',
     body: JSON.stringify({ identifier }),
   });
@@ -25,14 +25,14 @@ export const verifyChallenge = async (
   {email, response}:
   {email: string, response: any}
 ) => {
-  const payload:ChallengeVerifiicationDTO = {
+  const payload:AuthenticationChallengeVerifiicationDTO = {
     identifier: {
       value: email,
       type: 'email',
     },
     response
   }
-  const res = await fetch('/api/auth/verify-registration', {
+  const res = await fetch('/api/auth/passkey/verify-register', {
     method: 'POST',
     body: JSON.stringify(payload),
   })

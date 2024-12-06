@@ -5,11 +5,11 @@ import {
   VerifyRegistrationResponseOpts,
 } from '@simplewebauthn/server';
 import { addNewPasskey } from '@/actions/firestore/auth';
-import { ChallengeVerifiicationDTO, Passkey } from '@/types/auth';
+import { RegistrationChallengeVerifiicationDTO, Passkey } from '@/types/auth';
 import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
-  const data = await request.json() as ChallengeVerifiicationDTO
+  const data = await request.json() as RegistrationChallengeVerifiicationDTO
   const rpID = process.env.AUTHN_RP_ID!;
   const expectedOrigin = process.env.AUTHN_ORIGIN!;
   const identifier = data.identifier;
@@ -19,15 +19,10 @@ export async function POST(request: NextRequest) {
   let parsedOptionsObj:PublicKeyCredentialCreationOptionsJSON
   try {
     parsedOptionsObj = JSON.parse(optionsCookie?.value!) as PublicKeyCredentialCreationOptionsJSON
+    if (!parsedOptionsObj) throw new Error('Error parsing options')
   } catch (error) {
     return NextResponse.json(
       { message: error },
-      { status: 400 }
-    );
-  }
-  if (!parsedOptionsObj) {
-    return NextResponse.json(
-      { message: 'Error verifying registration' },
       { status: 400 }
     );
   }

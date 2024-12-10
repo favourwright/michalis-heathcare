@@ -25,3 +25,24 @@ export const addNewPasskey = async (identifier: string, passKey: Passkey) => {
     updatedAt: Timestamp.now(),
   }, { merge: true });
 }
+
+export const updatePasskeyCounter = async (
+  {identifier, passkeyID, newCounter}:
+  {identifier: string, passkeyID: string, newCounter: number}
+) => {
+  const user = await fetchUserDetails(identifier);
+  const updatedPasskeys = user?.passKeys?.map(passkey => {
+    if (passkey.id === passkeyID) {
+      return {
+        ...passkey,
+        counter: newCounter,
+      }
+    }
+    return passkey
+  })
+  const userRef = doc(db, "users", identifier);
+  await updateDoc(userRef, {
+    passKeys: JSON.stringify(updatedPasskeys),
+    updatedAt: Timestamp.now(),
+  });
+}

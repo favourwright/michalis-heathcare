@@ -1,4 +1,4 @@
-import { fetchUserDetails } from "@/actions/firestore/auth";
+import { fetchUserDetails, updatePasskeyCounter } from "@/actions/firestore/auth";
 import { AuthenticationChallengeVerifiicationDTO } from "@/types/auth";
 import { verifyAuthenticationResponse, VerifyAuthenticationResponseOpts } from "@simplewebauthn/server";
 import { WebAuthnCredential } from "@simplewebauthn/types";
@@ -45,27 +45,22 @@ export async function POST(request: NextRequest) {
   //   expectedChallenge: options.challenge,
   // };
   try {
+
+    // // Extract the values from the object
+    const values = Object.values(passkey.publicKey);
+    const publicKeyUint8 = new Uint8Array(values as any);
     verification = await verifyAuthenticationResponse({
       response,
       expectedOrigin: expectedOrigin,
       expectedRPID: rpID,
       requireUserVerification: false,
       expectedChallenge: currentOptionsObj.challenge,
-      supportedAlgorithmIDs: [-7, -257],
-      authenticator: {
-        credentialPublicKey: new Uint8Array(passkey.publicKey.buffer),
-      },
       credential: {
         id: passkey.id,
-        publicKey: passkey.publicKey,
+        publicKey: publicKeyUint8,
         counter: passkey.counter,
         transports: passkey.transports,
       },
-    } as VerifyAuthenticationResponseOpts & {
-      supportedAlgorithmIDs: number[],
-      authenticator: {
-        credentialPublicKey: Uint8Array,
-      }
     });
   } catch (error) {
     console.error({ verifyAuthenticationResponseError: error });
@@ -76,21 +71,20 @@ export async function POST(request: NextRequest) {
   }
   
   const { verified } = verification;
+  if (!verified) {
+    return NextResponse.json(
+      { message: 'Error verifying authentication' },
+      { status: 400 }
+    );
+  }
   const { authenticationInfo } = verification;
   const { newCounter } = authenticationInfo;
 
+  await updatePasskeyCounter({identifier: identifier.value, newCounter, passkeyID: passkey.id});
+  // remove the options cookie
+  (await cookies()).delete('options')
+
   return NextResponse.json({
     message: 'Success',
-    verified,
-    newCounter,
-    passkey
-  }, { status: 200 })
-
-  // await updatePasskeyCounter(identifier.value, {newCounter, passkeyID: passkey.id});
-  // // remove the options cookie
-  // (await cookies()).delete('options')
-
-  // return NextResponse.json({
-  //   message: 'Success',
-  // })
+  })
 }

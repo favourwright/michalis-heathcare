@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   generateRegistrationOptions,
   GenerateRegistrationOptionsOpts,
-  VerifiedRegistrationResponse,
   verifyRegistrationResponse,
   VerifyRegistrationResponseOpts,
 } from '@simplewebauthn/server';

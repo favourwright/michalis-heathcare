@@ -1,9 +1,9 @@
-import { ChallengeDTO, RegistrationChallengeVerifiicationDTO } from '@/types/auth';
+import { Identifier, RegistrationChallengeVerifiicationDTO } from '@/types/auth';
 import { AuthenticationResponseJSON } from '@simplewebauthn/types';
 import { useMutation } from '@tanstack/react-query';
 
 export const fetchChallenge = async (email: string): Promise<any> => {
-  const identifier: ChallengeDTO = {
+  const identifier: Identifier = {
     type: 'email',
     value: email
   }
@@ -32,7 +32,7 @@ export const verifyChallenge = async (
     },
     response
   }
-  const res = await fetch('/api/auth/passkey/verify-authenticate', {
+  const res = await fetch('/api/auth/passkey/authenticate', {
     method: 'POST',
     body: JSON.stringify(payload),
   })

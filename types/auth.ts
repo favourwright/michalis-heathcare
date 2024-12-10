@@ -46,7 +46,6 @@ export type Identifier = {
   type: PreferredAuthNIdentifierTypes
   value: string
 }
-export type ChallengeDTO = Identifier
 export type RegistrationChallengeVerifiicationDTO = {
   identifier: Identifier
   response: RegistrationResponseJSON

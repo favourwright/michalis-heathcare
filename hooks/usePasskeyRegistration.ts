@@ -1,5 +1,5 @@
 import { Identifier, AuthenticationChallengeVerifiicationDTO } from '@/types/auth';
-import { RegistrationResponseJSON } from '@simplewebauthn/types';
+import { RegistrationResponseJSON } from '@simplewebauthn/browser';
 import { useMutation } from '@tanstack/react-query';
 
 export const fetchChallenge = async (email: string): Promise<any> => {
@@ -7,7 +7,7 @@ export const fetchChallenge = async (email: string): Promise<any> => {
     type: 'email',
     value: email
   }
-  const response = await fetch('/api/auth/passkey/register-new', {
+  const response = await fetch('/api/auth/passkey/register', {
     method: 'POST',
     body: JSON.stringify({ identifier }),
   });
@@ -32,7 +32,7 @@ export const verifyChallenge = async (
     },
     response
   }
-  const res = await fetch('/api/auth/passkey/register-new', {
+  const res = await fetch('/api/auth/passkey/register', {
     method: 'POST',
     body: JSON.stringify(payload),
   })

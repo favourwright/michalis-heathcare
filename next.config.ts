@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   env: {
-    APP_NAME: process.env.APP_NAME || "Portfolio Next",
+    APP_NAME_ALIAS: 'helt',
+    APP_NAME: process.env.APP_NAME || "Michalis Heath Care",
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     AUTHN_RP_ID: process.env.AUTHN_RP_ID,
     AUTHN_ORIGIN: process.env.AUTHN_RP_ID === 'localhost' ? 'http://localhost:3000' : `https://${process.env.AUTHN_RP_ID}`
-  }
+  },
 };
 
 export default nextConfig;

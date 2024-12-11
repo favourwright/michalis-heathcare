@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   generateRegistrationOptions,
   GenerateRegistrationOptionsOpts,
+  RegistrationResponseJSON,
   verifyRegistrationResponse,
   VerifyRegistrationResponseOpts,
 } from '@simplewebauthn/server';
 import { addNewPasskey, fetchUserDetails } from '@/actions/firestore/auth';
 import { cookies } from 'next/headers';
 import { Identifier, Passkey } from '@/types/auth';
-import { RegistrationResponseJSON } from '@simplewebauthn/types';
 
 const rpID = process.env.AUTHN_RP_ID!;
 const rpName = process.env.APP_NAME!;

@@ -2,9 +2,10 @@ import { db } from "@/firebase";
 import { doc, DocumentSnapshot, getDoc, Timestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { Passkey, UserData } from '@/types/auth';
 
+const collectionName = "passkeys" // where to store user passkey data
 // check if user already exists
 export const fetchUserDetails = async (identifier:string): Promise<UserData | undefined> => {
-  const userRef = doc(db, "users", identifier);
+  const userRef = doc(db, collectionName, identifier);
   const docSnap = await getDoc(userRef) as DocumentSnapshot<UserData>
   
   if (!docSnap.exists()) return
@@ -16,7 +17,7 @@ export const fetchUserDetails = async (identifier:string): Promise<UserData | un
 }
 
 export const addNewPasskey = async (identifier: string, passKey: Passkey) => {
-  const userRef = doc(db, "users", identifier);
+  const userRef = doc(db, collectionName, identifier);
   const user = await fetchUserDetails(identifier);
   const existingKeys = user?.passKeys || [];
   const payload = existingKeys.length ? [...existingKeys, passKey] : [passKey];
@@ -40,7 +41,7 @@ export const updatePasskeyCounter = async (
     }
     return passkey
   })
-  const userRef = doc(db, "users", identifier);
+  const userRef = doc(db, collectionName, identifier);
   await updateDoc(userRef, {
     passKeys: JSON.stringify(updatedPasskeys),
     updatedAt: Timestamp.now(),

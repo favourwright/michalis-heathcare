@@ -1,5 +1,5 @@
 import { Identifier, RegistrationChallengeVerifiicationDTO } from '@/types/auth';
-import { AuthenticationResponseJSON } from '@simplewebauthn/types';
+import { AuthenticationResponseJSON } from '@simplewebauthn/browser';
 import { useMutation } from '@tanstack/react-query';
 
 export const fetchChallenge = async (email: string): Promise<any> => {

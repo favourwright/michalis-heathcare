@@ -1,7 +1,11 @@
 import { fetchUserDetails, updatePasskeyCounter } from "@/actions/firestore/auth";
 import { Identifier } from "@/types/auth";
-import { generateAuthenticationOptions, verifyAuthenticationResponse } from "@simplewebauthn/server";
-import { AuthenticationResponseJSON, WebAuthnCredential } from "@simplewebauthn/types";
+import {
+  AuthenticationResponseJSON,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse,
+  WebAuthnCredential
+} from "@simplewebauthn/server";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 

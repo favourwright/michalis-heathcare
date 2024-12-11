@@ -5,6 +5,7 @@ import {
   RegistrationResponseJSON,
   verifyRegistrationResponse,
   VerifyRegistrationResponseOpts,
+  WebAuthnCredential,
 } from '@simplewebauthn/server';
 import { addNewPasskey, fetchUserDetails } from '@/actions/firestore/auth';
 import { cookies } from 'next/headers';
@@ -17,7 +18,7 @@ const expectedOrigin = process.env.AUTHN_ORIGIN!;
 const handleChallengeGeneration = async (identifier: string) => {
   try {
     const cookies_ = await cookies();
-    const userPasskeys = (await fetchUserDetails(identifier))?.passKeys || [];
+    const userPasskeys = ((await fetchUserDetails(identifier))?.passKeys || []) as WebAuthnCredential[]
     const payload:GenerateRegistrationOptionsOpts = {
       rpID,
       rpName,

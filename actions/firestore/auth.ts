@@ -1,6 +1,7 @@
 import { db } from "@/firebase";
 import { doc, DocumentSnapshot, getDoc, Timestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { Passkey, UserData } from '@/types/auth';
+import { WebAuthnCredential } from "@simplewebauthn/browser";
 
 const collectionName = "passkeys" // where to store user passkey data
 // check if user already exists
@@ -32,7 +33,7 @@ export const updatePasskeyCounter = async (
   {identifier: string, passkeyID: string, newCounter: number}
 ) => {
   const user = await fetchUserDetails(identifier);
-  const updatedPasskeys = user?.passKeys?.map(passkey => {
+  const updatedPasskeys = (user?.passKeys as WebAuthnCredential[])?.map(passkey => {
     if (passkey.id === passkeyID) {
       return {
         ...passkey,

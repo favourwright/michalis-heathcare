@@ -1,18 +1,19 @@
-import {
-  PublicKeyCredentialDescriptorJSON,
-  PublicKeyCredentialCreationOptions,
-  CredentialDeviceType,
-  AuthenticatorTransportFuture,
-  RegistrationResponseJSON,
-  AuthenticationResponseJSON,
-  WebAuthnCredential,
-} from '@simplewebauthn/types'
+// import {
+//   PublicKeyCredentialDescriptorJSON,
+//   PublicKeyCredentialCreationOptions,
+//   CredentialDeviceType,
+//   AuthenticatorTransportFuture,
+//   RegistrationResponseJSON,
+//   AuthenticationResponseJSON,
+//   WebAuthnCredential,
+// } from '@simplewebauthn/types'
+import { AuthenticationResponseJSON, AuthenticatorTransportFuture, CredentialDeviceType, RegistrationResponseJSON, WebAuthnCredential } from '@simplewebauthn/browser';
 import { Timestamp } from 'firebase/firestore';
 
 export type UserData = {
   email: string
   name: string
-  passKeys: PublicKeyCredentialDescriptorJSON[] | WebAuthnCredential[]
+  passKeys: PublicKeyCredentialRequestOptionsJSON[] | WebAuthnCredential[]
   options: PublicKeyCredentialCreationOptions
   updatedAt: Timestamp
 }

@@ -16,7 +16,7 @@ const handleChallengeGeneration = async (identifier: string) => {
   try {
     const cookies_ = await cookies();
     // registered authenticators
-    const userPasskeys = (await fetchUserDetails(identifier))?.passKeys || [];
+    const userPasskeys = ((await fetchUserDetails(identifier))?.passKeys || []) as WebAuthnCredential[]
     const options = await generateAuthenticationOptions({
       rpID,
       // Require users to use a previously-registered authenticator
@@ -43,7 +43,7 @@ const handleChallengeVerification = async (identifier: string, response: Authent
     const currentOptionsObj = JSON.parse(optionsCookie?.value!)
     if (!currentOptionsObj) throw new Error('Error parsing options')
   
-    const userPasskeys = (await fetchUserDetails(identifier))?.passKeys || [];
+    const userPasskeys = ((await fetchUserDetails(identifier))?.passKeys || []) as WebAuthnCredential[]
     // find passkey user signed challenge with
     const passkey = userPasskeys.find(passkey => passkey.id === response.id) as WebAuthnCredential
     if (!passkey) {

@@ -13,7 +13,7 @@ const handleChallengeGeneration = async (identifier: string) => {
     const cookies_ = await cookies();
     // registered authenticators
     const userPasskeys = (await fetchUserDetails(identifier))?.passKeys || [];
-    const options: PublicKeyCredentialRequestOptionsJSON = await generateAuthenticationOptions({
+    const options = await generateAuthenticationOptions({
       rpID,
       // Require users to use a previously-registered authenticator
       allowCredentials: userPasskeys.map(passkey => ({
@@ -36,7 +36,7 @@ const handleChallengeVerification = async (identifier: string, response: Authent
   try {
     const cookies_ = await cookies();
     const optionsCookie = cookies_.get('options')
-    const currentOptionsObj = JSON.parse(optionsCookie?.value!) as PublicKeyCredentialRequestOptionsJSON
+    const currentOptionsObj = JSON.parse(optionsCookie?.value!)
     if (!currentOptionsObj) throw new Error('Error parsing options')
   
     const userPasskeys = (await fetchUserDetails(identifier))?.passKeys || [];

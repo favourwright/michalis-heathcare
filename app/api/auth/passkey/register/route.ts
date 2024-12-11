@@ -31,7 +31,7 @@ const handleChallengeGeneration = async (identifier: string) => {
         id: passkey.id,
       })),
     };
-    const options:PublicKeyCredentialCreationOptionsJSON = await generateRegistrationOptions(payload);
+    const options = await generateRegistrationOptions(payload);
     cookies_.set('options', JSON.stringify(options), {
       httpOnly: true,
     })
@@ -45,7 +45,7 @@ const handleChallengeVerification = async (identifier: string, response: Registr
   try {
     const cookie_ = await cookies();
     const optionsCookie = cookie_.get('options')
-    const parsedOptionsObj = JSON.parse(optionsCookie?.value!) as PublicKeyCredentialCreationOptionsJSON
+    const parsedOptionsObj = JSON.parse(optionsCookie?.value!)
     if (!parsedOptionsObj) throw new Error('Error parsing options')
   
     const opts: VerifyRegistrationResponseOpts = {

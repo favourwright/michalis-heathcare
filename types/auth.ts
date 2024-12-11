@@ -1,6 +1,6 @@
 import {
   PublicKeyCredentialDescriptorJSON,
-  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialCreationOptions,
   CredentialDeviceType,
   AuthenticatorTransportFuture,
   RegistrationResponseJSON,
@@ -13,13 +13,13 @@ export type UserData = {
   email: string
   name: string
   passKeys: PublicKeyCredentialDescriptorJSON[] | WebAuthnCredential[]
-  options: PublicKeyCredentialCreationOptionsJSON
+  options: PublicKeyCredentialCreationOptions
   updatedAt: Timestamp
 }
 
 export type Passkey = {
   // SQL: Store as `TEXT`. Index this column
-  id: Base64URLString;
+  id: string;
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
   //      Caution: Node ORM's may map this to a Buffer on retrieval,
   //      convert to Uint8Array as necessary
@@ -28,7 +28,7 @@ export type Passkey = {
   user: UserData['email'];
   // SQL: Store as `TEXT`. Index this column. A UNIQUE constraint on
   //      (webAuthnUserID + user) also achieves maximum user privacy
-  webauthnUserID: Base64URLString;
+  webauthnUserID: string;
   // SQL: Consider `BIGINT` since some authenticators return atomic timestamps as counters
   counter: number;
   // SQL: `VARCHAR(32)` or similar, longest possible value is currently 12 characters

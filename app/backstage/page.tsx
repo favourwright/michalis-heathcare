@@ -7,7 +7,7 @@ import {
 import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
 import { AuthenticationResponseJSON, RegistrationResponseJSON } from '@simplewebauthn/types';
 
-export const signChallenge = async (optionsJSON: any):Promise<AuthenticationResponseJSON> => {
+const signChallenge = async (optionsJSON: any):Promise<AuthenticationResponseJSON> => {
   try {
     const res = await startAuthentication({ optionsJSON });
     return res

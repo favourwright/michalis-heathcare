@@ -17,11 +17,13 @@ export const fetchUserDetails = async (identifier:string): Promise<UserData | un
   }
 }
 
-export const addNewPasskey = async (identifier: string, passKey: Passkey) => {
+export const addNewPasskey = async (
+  {identifier, passKey, override=false}:
+  {identifier: string, passKey: Passkey, override?: boolean}) => {
   const userRef = doc(db, collectionName, identifier);
   const user = await fetchUserDetails(identifier);
   const existingKeys = user?.passKeys || [];
-  const payload = existingKeys.length ? [...existingKeys, passKey] : [passKey];
+  const payload = (existingKeys.length && !override) ? [...existingKeys, passKey] : [passKey];
   await setDoc(userRef, {
     passKeys: JSON.stringify(payload),
     updatedAt: Timestamp.now(),

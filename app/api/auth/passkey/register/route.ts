@@ -42,7 +42,11 @@ const handleChallengeGeneration = async (identifier: string) => {
   }
 }
 
-const handleChallengeVerification = async (identifier: string, response: RegistrationResponseJSON) => {
+const handleChallengeVerification = async (
+  identifier: string,
+  response: RegistrationResponseJSON,
+  overridePasskeys?: boolean
+) => {
   try {
     const cookie_ = await cookies();
     const optionsCookie = cookie_.get('options')
@@ -79,7 +83,7 @@ const handleChallengeVerification = async (identifier: string, response: Registr
       backedUp: credentialBackedUp,
     };
   
-    await addNewPasskey(identifier, newPasskey);
+    await addNewPasskey({identifier, passKey:newPasskey, override:overridePasskeys});
     // remove the options cookie
     (await cookies()).delete('options')
   } catch (error) {
@@ -89,13 +93,21 @@ const handleChallengeVerification = async (identifier: string, response: Registr
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json() as {identifier: Identifier, response: RegistrationResponseJSON}
-  const {identifier, response} = body;
+  const body = await request.json() as {
+    identifier: Identifier,
+    /* @param overridePasskeys: boolean
+      used when user signs up afresh with the same email
+      without verifying the previous signup through email verification
+    */
+    overridePasskeys?: boolean,
+    response: RegistrationResponseJSON
+  }
+  const {identifier, overridePasskeys, response} = body;
 
   try {
     if(response) {
       // verify challenge
-      await handleChallengeVerification(identifier.value, response)
+      await handleChallengeVerification(identifier.value, response, overridePasskeys)
       return NextResponse.json(
         { message: 'Passkey registered' },
         { status: 200 }

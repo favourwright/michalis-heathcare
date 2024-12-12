@@ -7,9 +7,10 @@ const Page = () => {
   return (
     <div>
       <Hero />
-      <WhyChooseUs />
-      <WaitingRoom />
-      <div className="min-h-svh bg-teal-50"></div>
+      {/* <WhyChooseUs />
+      <WaitingRoom /> */}
+      <div className="min-h-svh bg-white"></div>
+      <div className="min-h-svh bg-gray-50"></div>
     </div>
   )
 }

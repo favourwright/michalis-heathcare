@@ -73,13 +73,13 @@ export default {
   					transform: 'translateX(0)'
   				},
   				'25%': {
-  					transform: 'translateX(-10px)'
+  					transform: 'translateX(-6px)'
   				},
   				'50%': {
-  					transform: 'translateX(10px)'
+  					transform: 'translateX(6px)'
   				},
   				'75%': {
-  					transform: 'translateX(-10px)'
+  					transform: 'translateX(-6px)'
   				}
   			}
   		},

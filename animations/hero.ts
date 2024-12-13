@@ -54,3 +54,31 @@ export const animateHeroText = () => {
 
   return tl
 }
+
+export const animateHeroImageSection = () => {
+  gsap.set('[data-hero-image]', {autoAlpha: 0})
+  const tl = gsap.timeline({})
+
+  // hero image into animation
+  tl.to('[data-hero-image]', {
+    autoAlpha: 1,
+    duration: 1.4,
+    ease: 'power3.inOut',
+  })
+  tl.from('[data-cta]', {
+    xPercent: -82,
+    ease: 'power1.inOut',
+  })
+  tl.from('[data-cta] > span:nth-child(1)', {
+    opacity: 0,
+    duration: 0.3,
+    ease: 'power1.inOut',
+    onComplete: () => {
+      document
+        .querySelector('[data-cta] > span:nth-child(2) > span')
+        ?.classList.add('animate-wiggle')
+    }
+  })
+
+  return tl
+}

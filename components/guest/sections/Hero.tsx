@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { animateHeroText } from "@/animations/hero";
+import { animateHeroImageSection, animateHeroText } from "@/animations/hero";
 
 const Hero = () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -17,6 +17,7 @@ const Hero = () => {
       const tl = gsap.timeline()
       tl
         .add(animateHeroText())
+        .add(animateHeroImageSection(), '-=1')
     }, heroRef)
 
     return () => context.revert()
@@ -59,7 +60,8 @@ const Hero = () => {
 const HeroImageSection = () => {
   return (
     <div
-      className="flex-1 self-stretch flex p-3 bg-white/10
+      data-hero-image
+      className="flex-1 self-stretch flex p-3 bg-white/10 opacity-0
       ring-2 ring-mindaro/50 rounded-3xl select-none">
       <div className="flex-1 bg-yale-blue rounded-2xl overflow-hidden relative">        
         <Image
@@ -72,17 +74,22 @@ const HeroImageSection = () => {
         />
 
         <div className="flex items-end absolute inset-0 p-4">
-          <button
-            className="flex-1 p-2 flex justify-between items-center pl-6
-            bg-yale-blue/30 rounded-lg text-3xl backdrop-blur
-            text-mindaro-900 font-semibold shadow-lg shadow-yale-blue/30">
-            <span>Get started</span>
-            <span
-              className="h-20 w-20 rounded-md bg-mindaro text-yale-blue
-              flex items-center justify-center shadow-lg shadow-yale-blue/30">
-              <Icon icon="material-symbols:arrow-forward-ios-rounded" />
-            </span>
-          </button>
+          <div className="flex-1 flex overflow-x-hidden">
+            <button
+              data-cta
+              className="flex-1 p-2 flex justify-between items-center pl-6
+              bg-yale-blue/30 rounded-lg text-3xl backdrop-blur
+              text-mindaro-900 font-semibold shadow-lg shadow-yale-blue/30">
+              <span>Get started</span>
+              <span
+                className="h-20 w-20 rounded-md bg-mindaro text-yale-blue
+                flex items-center justify-center shadow-lg shadow-yale-blue/30">
+                <span>
+                  <Icon icon="material-symbols:arrow-forward-ios-rounded" />
+                </span>
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

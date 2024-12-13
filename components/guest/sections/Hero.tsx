@@ -37,14 +37,14 @@ const Hero = () => {
           gap-10 relative">
           <div
             data-hero-text
-            className="md:max-w-[80%] flex-1 py-10 self-center opacity-0
+            className="md:max-w-[80%] flex-1 self-center opacity-0
             relative z-10">
             <h1
               className="font-bold tracking-tighter text-clamp-xl
               text-white leading-none">
               Book Your Healthcare Appointments with Ease
             </h1>
-            <p className="max-w-[600px] text-white/50 text-clamp-xs mt-6 opacity-0">
+            <p className="max-w-[600px] text-white/50 text-clamp-xs mt-6 opacity-0 leading-tight">
               Find and book appointments with top healthcare providers in your area.
               Fast, easy, and convenient.
             </p>
@@ -82,9 +82,9 @@ const HeroImageSection = () => {
               text-mindaro-900 font-semibold shadow-lg shadow-yale-blue/30">
               <span>Get started</span>
               <span
-                className="h-20 w-20 rounded-md bg-mindaro text-yale-blue
+                className="h-10 md:h-20 w-10 md:w-20 rounded-md bg-mindaro text-yale-blue
                 flex items-center justify-center shadow-lg shadow-yale-blue/30">
-                <span>
+                <span className="md:text-5xl">
                   <Icon icon="material-symbols:arrow-forward-ios-rounded" />
                 </span>
               </span>

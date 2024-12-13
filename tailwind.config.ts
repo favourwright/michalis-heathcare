@@ -64,7 +64,7 @@ export default {
   			'9xl': '96rem'
   		},
 			fontSize: {
-        'clamp-xl': 'clamp(4rem, 8vw, 12rem)',
+        'clamp-xl': 'clamp(3rem, 8vw, 12rem)',
         'clamp-xs': 'clamp(1rem, 2vw, 2rem)',
       },
   		keyframes: {

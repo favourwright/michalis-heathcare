@@ -63,7 +63,7 @@ const HeroImageSection = () => {
       data-hero-image
       className="flex-1 self-stretch flex p-3 bg-white/10 opacity-0
       ring-2 ring-mindaro/50 rounded-3xl select-none">
-      <div className="flex-1 bg-yale-blue rounded-2xl relative">        
+      <div className="flex-1 bg-yale-blue rounded-2xl relative overflow-hidden">        
         <Image
           src="/images/hero.jpeg"
           alt="Image of a male nurse"

@@ -34,7 +34,7 @@ const Hero = () => {
           tag="div"
           paddingSides="x"
           className="w-full flex max-md:flex-col justify-between py-3 pt-28
-          gap-10 relative overflow-hidden">
+          gap-10 relative">
           <div
             data-hero-text
             className="md:max-w-[80%] flex-1 py-10 self-center opacity-0
@@ -63,7 +63,7 @@ const HeroImageSection = () => {
       data-hero-image
       className="flex-1 self-stretch flex p-3 bg-white/10 opacity-0
       ring-2 ring-mindaro/50 rounded-3xl select-none">
-      <div className="flex-1 bg-yale-blue rounded-2xl overflow-hidden relative">        
+      <div className="flex-1 bg-yale-blue rounded-2xl relative">        
         <Image
           src="/images/hero.jpg"
           alt="Image of a male nurse"
@@ -74,7 +74,7 @@ const HeroImageSection = () => {
         />
 
         <div className="flex items-end absolute inset-0 p-4">
-          <div className="flex-1 flex overflow-x-hidden">
+          <div className="flex-1 flex overflow-x-hidden rounded-lg">
             <button
               data-cta
               className="flex-1 p-2 flex justify-between items-center pl-6

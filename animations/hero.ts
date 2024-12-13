@@ -11,7 +11,7 @@ export const animateHeroText = () => {
 
   // text intro animation
   tl.from(heroText.lines, {
-    xPercent: -110,
+    xPercent: -120,
     ease: 'power2.inOut',
     duration: 1.4,
     stagger: {
@@ -66,7 +66,8 @@ export const animateHeroImageSection = () => {
     ease: 'power3.inOut',
   })
   tl.from('[data-cta]', {
-    xPercent: -82,
+    xPercent: -80,
+    duration: 1,
     ease: 'power1.inOut',
   })
   tl.from('[data-cta] > span:nth-child(1)', {

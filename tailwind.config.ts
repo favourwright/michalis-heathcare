@@ -63,6 +63,10 @@ export default {
   			'8xl': '88rem',
   			'9xl': '96rem'
   		},
+			fontSize: {
+        'clamp-xl': 'clamp(4rem, 8vw, 12rem)',
+        'clamp-xs': 'clamp(1rem, 2vw, 2rem)',
+      },
   		keyframes: {
   			wiggle: {
   				'0%, 100%': {

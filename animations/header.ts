@@ -6,8 +6,8 @@ export const animateHeader = () => {
 
   const tl = gsap.timeline({
     scrollTrigger: {
-      start: 'top+=200',
-      end: '+=1',
+      start: 'top+=100',
+      end: '+=100',
       toggleActions: 'play none none reverse',
       scrub: 2,
     }
@@ -33,7 +33,7 @@ export const animateHeaderLine = () => {
       start: 'bottom top',
       end: '+=1',
       toggleActions: 'play none none reverse',
-      scrub: 2,
+      scrub: 4,
     },
   });
 

@@ -27,20 +27,24 @@ const Header = () => {
     <header
       ref={headerRef}
       data-header
-      className="fixed top-0 inset-x-0 z-50 overflow-hidden">
+      className="group fixed top-0 inset-x-0 z-50 overflow-hidden">
       <DefaultMaxWidth
         tag="div"
         paddingSides="x"
         className="w-full flex items-center justify-between py-3 relative z-10">
-        <NextLink href="/"><Logo priority /></NextLink>
+        <NextLink className="translate-x-1.5" href="/">
+          <Logo priority />
+        </NextLink>
 
-        <button>
-          lets get
+        <button
+          className="text-center px-6 py-2 rounded-full outline-none
+          ring-2 font-semibold ring-mindaro text-mindaro bg-yale-blue">
+          Find a Doctor
         </button>
       </DefaultMaxWidth>
-      <hr data-hr className="border border-lavender-blush/50 opacity-0 relative z-10 origin-left" />
+      <hr data-hr className="border border-mindaro opacity-0 relative z-10 origin-left" />
       <div data-bg className="absolute inset-0 pointer-events-none" />
-      <NoiseDark className="absolute inset-0 z-10 opacity-50 pointer-events-none" />
+      <NoiseDark className="absolute inset-0 z-10 opacity-50 mix-blend-multiply pointer-events-none" />
     </header>
   )
 }

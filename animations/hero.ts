@@ -70,10 +70,15 @@ export const animateHeroImageSection = () => {
     duration: 1,
     ease: 'power1.inOut',
   })
-  tl.from('[data-cta] > span:nth-child(1)', {
+  const hq = gsap.utils.selector('[data-cta]')
+  const heroText = new SplitType(hq('span:nth-child(1)'), { types: 'chars' })
+  tl.from(heroText.chars, {
     opacity: 0,
     duration: 0.3,
     ease: 'power1.inOut',
+    stagger: {
+      each: 0.05,
+    },
     onComplete: () => {
       document
         .querySelector('[data-cta] > span:nth-child(2) > span')

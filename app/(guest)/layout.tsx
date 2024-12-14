@@ -1,5 +1,6 @@
 import Header from "@/components/guest/Header";
 import Footer from "@/components/guest/Footer";
+import GetStarted from "@/components/GetStarted";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -7,6 +8,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <GetStarted />
     </>
   )
 }

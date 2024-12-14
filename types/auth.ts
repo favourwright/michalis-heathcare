@@ -1,17 +1,9 @@
-// import {
-//   PublicKeyCredentialDescriptorJSON,
-//   PublicKeyCredentialCreationOptions,
-//   CredentialDeviceType,
-//   AuthenticatorTransportFuture,
-//   RegistrationResponseJSON,
-//   AuthenticationResponseJSON,
-//   WebAuthnCredential,
-// } from '@simplewebauthn/types'
 import { AuthenticationResponseJSON, AuthenticatorTransportFuture, CredentialDeviceType, RegistrationResponseJSON, WebAuthnCredential } from '@simplewebauthn/browser';
 import { Timestamp } from 'firebase/firestore';
 
 export type UserData = {
   email: string
+  emailVerified?: boolean
   name: string
   passKeys: PublicKeyCredentialRequestOptionsJSON[] | WebAuthnCredential[]
   options: PublicKeyCredentialCreationOptions
@@ -50,6 +42,7 @@ export type Identifier = {
 export type RegistrationChallengeVerifiicationDTO = {
   identifier: Identifier
   response: RegistrationResponseJSON
+  overridePasskeys?: boolean
 }
 export type AuthenticationChallengeVerifiicationDTO = {
   identifier: Identifier

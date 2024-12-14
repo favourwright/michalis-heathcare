@@ -1,52 +1,54 @@
+import { auth } from "@/firebase";
 import { db } from "@/firebase";
-import { doc, DocumentSnapshot, getDoc, Timestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { Passkey, UserData } from '@/types/auth';
-import { WebAuthnCredential } from "@simplewebauthn/browser";
+import { UserData } from "@/types/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, DocumentSnapshot, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import crypto from 'crypto';
 
-const collectionName = "passkeys" // where to store user passkey data
-// check if user already exists
-export const fetchUserDetails = async (identifier:string): Promise<UserData | undefined> => {
-  const userRef = doc(db, collectionName, identifier);
+const userColledtion = "users"; // where to store user data
+const passkeyCollection = "passkeys"
+
+export const fbSignup = async (email: string) => {
+  const password = generateSecurePassword();
+  const user = await createUserWithEmailAndPassword(auth, email, password);
+  const ref = doc(db, passkeyCollection, email);
+  await updateDoc(ref, {
+    client: btoa(password), // store password in base64
+    updatedAt: Timestamp.now(),
+  });
+
+  return user
+}
+
+export const fbLogin = async (
+  { email, password, onSuccess }:
+  { email: string, password: string, onSuccess?: () => Promise<void>}
+) => {
+  const user = await signInWithEmailAndPassword(auth, email, atob(password));
+  // const userRef = doc(db, userColledtion, email);
+  // await updateDoc(userRef, {
+  //   email,
+  //   updatedAt: Timestamp.now(),
+  // });
+
+  await onSuccess?.();
+  return user
+}
+
+export const fbLogout = async ({onSuccess}: {onSuccess?: () => Promise<void>}) => {
+  await signOut(auth);
+  await onSuccess?.();
+}
+
+export const fetchUserDetails = async (email: string) => {
+  const userRef = doc(db, userColledtion, email);
   const docSnap = await getDoc(userRef) as DocumentSnapshot<UserData>
   
   if (!docSnap.exists()) return
-  const data = docSnap.data()
-  return {
-    ...data,
-    passKeys: data?.passKeys ? JSON.parse(data?.passKeys as unknown as string || '') : [],
-  }
+  return docSnap.data()
 }
 
-export const addNewPasskey = async (
-  {identifier, passKey, override=false}:
-  {identifier: string, passKey: Passkey, override?: boolean}) => {
-  const userRef = doc(db, collectionName, identifier);
-  const user = await fetchUserDetails(identifier);
-  const existingKeys = user?.passKeys || [];
-  const payload = (existingKeys.length && !override) ? [...existingKeys, passKey] : [passKey];
-  await setDoc(userRef, {
-    passKeys: JSON.stringify(payload),
-    updatedAt: Timestamp.now(),
-  }, { merge: true });
-}
 
-export const updatePasskeyCounter = async (
-  {identifier, passkeyID, newCounter}:
-  {identifier: string, passkeyID: string, newCounter: number}
-) => {
-  const user = await fetchUserDetails(identifier);
-  const updatedPasskeys = (user?.passKeys as WebAuthnCredential[])?.map(passkey => {
-    if (passkey.id === passkeyID) {
-      return {
-        ...passkey,
-        counter: newCounter,
-      }
-    }
-    return passkey
-  })
-  const userRef = doc(db, collectionName, identifier);
-  await updateDoc(userRef, {
-    passKeys: JSON.stringify(updatedPasskeys),
-    updatedAt: Timestamp.now(),
-  });
+function generateSecurePassword(length = 16) {
+  return crypto.randomBytes(length).toString('base64').slice(0, length);
 }

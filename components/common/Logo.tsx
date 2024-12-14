@@ -27,22 +27,6 @@ const Logo = ({ priority}: Props) => {
         </span> 
       </div>
     </div>
-    // <div className="flex items-end gap-2 bg-mindaro pr-1.5 rounded-md">
-    //   <Image
-    //     data-logo
-    //     className="object-contain ring-2 ring-mindaro-300 rounded"
-    //     src="/images/helt.jpg"
-    //     alt="Logo"
-    //     priority={priority}
-    //     width={50}
-    //     height={50}
-    //   />
-    //   <span
-    //     data-logo-text
-    //     className="text-2xl font-bold text-mindaro-100 leading-tight">
-    //     {appNameAlias}
-    //   </span> 
-    // </div>
   )
 }
 

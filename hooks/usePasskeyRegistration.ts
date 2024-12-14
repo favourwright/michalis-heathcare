@@ -1,5 +1,5 @@
-import { Identifier, AuthenticationChallengeVerifiicationDTO } from '@/types/auth';
-import { RegistrationResponseJSON } from '@simplewebauthn/browser';
+import { fbSignup } from '@/actions/firestore/auth';
+import { Identifier, RegistrationChallengeVerifiicationDTO } from '@/types/auth';
 import { useMutation } from '@tanstack/react-query';
 
 export const fetchChallenge = async (email: string): Promise<any> => {
@@ -22,15 +22,16 @@ export function useChallenge() {
 }
 
 export const verifyChallenge = async (
-  {email, response}:
-  {email: string, response: any}
+  {email, response, overridePasskeys}:
+  {email: string, response: any, overridePasskeys?: boolean}
 ) => {
-  const payload:AuthenticationChallengeVerifiicationDTO = {
+  const payload:RegistrationChallengeVerifiicationDTO = {
     identifier: {
       value: email,
       type: 'email',
     },
-    response
+    response,
+    overridePasskeys
   }
   const res = await fetch('/api/auth/passkey/register', {
     method: 'POST',
@@ -42,6 +43,8 @@ export const verifyChallenge = async (
 
 export function useVerifyChallenge() {
   return useMutation({
-    mutationFn: ({email, response}: {email: string, response: RegistrationResponseJSON}) => verifyChallenge({email, response})
+    mutationFn: (
+      {identifier, response, overridePasskeys}: Omit<RegistrationChallengeVerifiicationDTO, 'identifier'> & { identifier: string }
+    ) => verifyChallenge({email:identifier, response, overridePasskeys})
   });
 }

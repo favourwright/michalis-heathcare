@@ -37,7 +37,7 @@ const Header = () => {
         </NextLink>
 
         <button
-          className="text-center px-6 py-2 rounded-full outline-none
+          className="text-center px-4 md:px-6 py-1 md:py-2 rounded-full outline-none
           ring-2 font-semibold ring-mindaro text-mindaro bg-yale-blue">
           Find a Doctor
         </button>

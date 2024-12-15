@@ -51,7 +51,7 @@ const Hero = () => {
           </div>
           <HeroImageSection />
         </DefaultMaxWidth>
-        <Noise className="absolute inset-0 mix-blend-screen opacity-80" />
+        <Noise className="absolute max-md:h-full md:w-full mix-blend-screen opacity-80" />
       </div>
     </section>
   )

@@ -2,6 +2,7 @@
 import Hero from "@/components/guest/sections/Hero"
 import WaitingRoom from "@/components/guest/sections/WaitingRoom"
 import WhyChooseUs from "@/components/guest/sections/WhyChooseUs"
+import SignInOrSignup from "@/components/SignUporIn"
 
 const Page = () => {
   return (
@@ -9,8 +10,10 @@ const Page = () => {
       <Hero />
       {/* <WhyChooseUs />
       <WaitingRoom /> */}
+      <div className="min-h-svh bg-gray-50">
+        <SignInOrSignup />
+      </div>
       <div className="min-h-svh bg-white"></div>
-      <div className="min-h-svh bg-gray-50"></div>
     </div>
   )
 }

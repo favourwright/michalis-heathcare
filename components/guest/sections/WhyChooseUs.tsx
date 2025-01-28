@@ -1,5 +1,5 @@
 import RevealedText from "@/components/animated/RevealedText"
-import DefaultMaxWidth from "@/components/DefaultMaxWidth"
+import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
 
 const WhyChooseUs = () => {
   const appNameAlias = process.env.APP_NAME_ALIAS

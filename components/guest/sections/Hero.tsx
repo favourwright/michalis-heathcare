@@ -1,5 +1,5 @@
 'use client'
-import DefaultMaxWidth from "@/components/DefaultMaxWidth"
+import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
 import Noise from "@/components/common/Noise"
 import Image from "next/image"
 import { Icon } from '@iconify/react';

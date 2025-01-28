@@ -2,7 +2,7 @@ import { gsap } from "gsap";
 
 export const animateHeader = () => {
   gsap.set('[data-bg]', {autoAlpha: 0, backgroundColor: '#fff'})
-  gsap.set('[data-logo-text]', { xPercent: -85, autoAlpha: 1 })
+  gsap.set('[data-logo-text]:not([data-expanded="true"])', { xPercent: -85, autoAlpha: 1 });
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -11,12 +11,12 @@ export const animateHeader = () => {
       toggleActions: 'play none none reverse',
       scrub: 2,
     }
-  })
-
+  });
+  
   tl
     .to('[data-bg]', { autoAlpha: 1 })
-    .to('[data-logo-text]', { xPercent: 0 })
-
+    .to('[data-logo-text]:not([data-expanded="true"])', { xPercent: 0 });
+  
   return tl
 }
 

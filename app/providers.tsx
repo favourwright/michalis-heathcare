@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { AuthProvider } from '@/context/auth'
 
+
 const queryClient = new QueryClient()
 export function Providers({children}: { children: React.ReactNode }) {
   return (
@@ -16,3 +17,4 @@ export function Providers({children}: { children: React.ReactNode }) {
     </ReactLenis>
   )
 }
+

@@ -1,4 +1,4 @@
-import DefaultMaxWidth from "@/components/DefaultMaxWidth"
+import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
 import { useGSAP } from "@gsap/react"
 import { useMemo, useRef, useState } from "react"
 import { gsap } from "gsap";

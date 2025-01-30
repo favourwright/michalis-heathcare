@@ -65,8 +65,12 @@ export default {
   			'9xl': '96rem'
   		},
   		fontSize: {
-  			'clamp-xl': 'clamp(3rem, 8vw, 12rem)',
-  			'clamp-xs': 'clamp(1rem, 2vw, 2rem)'
+				'clamp-xs': 'clamp(1rem, 2vw, 2rem)',
+				'clamp-sm': 'clamp(2rem, 3vw, 3rem)',
+				'clamp-md': 'clamp(3rem, 4vw, 4rem)',
+				'clamp-lg': 'clamp(4rem, 6vw, 6rem)',
+  			'clamp-xl': 'clamp(5rem, 8vw, 12rem)',
+  			'clamp-xxl': 'clamp(10rem, 24vw, 20rem)',
   		},
   		keyframes: {
   			wiggle: {

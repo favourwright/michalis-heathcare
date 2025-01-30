@@ -1,5 +1,5 @@
 'use client'
-import DefaultMaxWidth from "@/components/DefaultMaxWidth"
+import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
 import NextLink from "next/link"
 import Logo from "@/components/common/Logo"
 import { animateHeader, animateHeaderLine } from "@/animations/header"
@@ -7,8 +7,13 @@ import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NoiseDark from "@/components/common/NoiseDark"
+import Button from "@/components/common/Button"
+import useGetStartedStore from "@/stores/get-started"
 
-const Header = () => {
+type Props = {
+}
+
+const Header = ({  }: Props) => {
   gsap.registerPlugin(ScrollTrigger);
   const headerRef = useRef<HTMLElement>(null)
 
@@ -23,6 +28,8 @@ const Header = () => {
     return () => context.revert()
   }, [])
 
+  const { openModal } = useGetStartedStore()
+
   return (
     <header
       ref={headerRef}
@@ -32,15 +39,11 @@ const Header = () => {
         tag="div"
         paddingSides="x"
         className="w-full flex items-center justify-between py-3 relative z-10">
-        <NextLink className="translate-x-1.5" href="/">
+        <NextLink className="md:translate-x-1.5" href="/">
           <Logo priority />
         </NextLink>
 
-        <button
-          className="text-center px-4 md:px-6 py-1 md:py-2 rounded-full outline-none
-          ring-2 font-semibold ring-mindaro text-mindaro bg-yale-blue">
-          Find a Doctor
-        </button>
+        <Button onClick={openModal}>Find a Doctor</Button>
       </DefaultMaxWidth>
       <hr data-hr className="border border-mindaro opacity-0 relative z-10 origin-left" />
       <div data-bg className="absolute inset-0 pointer-events-none" />

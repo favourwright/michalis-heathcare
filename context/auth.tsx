@@ -17,7 +17,7 @@ type AuthContextType = {
   isRegistrationFetching: boolean
   isRegistrationVerifying: boolean
   signup: (email: string) => Promise<any>
-  // login: (email: string) => Promise<any>
+  login: (email: string) => Promise<any>
   // logout: () => void
 }
 
@@ -32,8 +32,12 @@ export const useAuthContext = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  // registration
   const { mutate: fetchRegistrationChallenge, isPending: isRegistrationFetching } = useRegistrationChallenge();
   const { mutate: verifyRegistrationChallenge, isPending: isRegistrationVerifying } = useRegistrationVerifyChallenge();
+
+  // login
+  
   
   const [isBootstrappingAuth, setIsBootstrappingAuth] = useState(true);
   // firebase user data: TODO: add proper type
@@ -51,7 +55,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       challengeFn: fetchRegistrationChallenge,
       verifyFn: verifyRegistrationChallenge
     }),
+    
     // login: async (email: string) => await loginWithPasskey(email),
+    login: async (email: string) => {},
     // logout: () => fbLogout({
     //   onSuccess: async () => setUserDetails(null)
     // }),

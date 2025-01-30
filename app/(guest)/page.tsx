@@ -10,9 +10,6 @@ const Page = () => {
       <Hero />
       {/* <WhyChooseUs />
       <WaitingRoom /> */}
-      <div className="min-h-svh bg-gray-50">
-        <SignInOrSignup />
-      </div>
       <div className="min-h-svh bg-white"></div>
     </div>
   )

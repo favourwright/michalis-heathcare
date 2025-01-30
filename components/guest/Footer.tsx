@@ -1,9 +1,15 @@
+'use client'
 import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
 import Button from "@/components/common/Button"
 import Logo from "@/components/common/Logo"
 import Link from 'next/link'
+import useGetStartedStore from "@/stores/get-started"
 
-const Footer = () => {
+type Props = {
+}
+
+const Footer = ({}: Props) => {
+  const { openModal } = useGetStartedStore()
   const links = [
     {
       title: "Home",
@@ -45,7 +51,7 @@ const Footer = () => {
               <p className="font-medium">
                 Experience cutting-edge diagnostics and personalized care at a fraction of the cost. sign up now!
               </p>
-              <Button>Get Started</Button>
+              <Button onClick={openModal}>Get Started</Button>
             </div>
           </div>
 
@@ -72,7 +78,10 @@ const Footer = () => {
 const FooterLinks = ({ title, href, ...props }: { title: string, href: string }) => {
   return (
     <li className="flex flex-col group relative rounded-lg overflow-hidden">
-      <Link href={href} className="w-full h-full p-3 bg-white/[0.02] border-b border-white/20">
+      <Link
+        {...props}
+        href={href}
+        className="w-full h-full p-3 bg-white/[0.02] border-b border-white/20">
         {title}
       </Link>
       <hr className="absolute inset-x-0 bottom-0

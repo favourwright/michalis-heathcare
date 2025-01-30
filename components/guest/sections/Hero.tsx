@@ -7,8 +7,11 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { animateHeroImageSection, animateHeroText } from "@/animations/hero";
+import useGetStartedStore from "@/stores/get-started"
 
-const Hero = () => {
+type Props = {
+}
+const Hero = ({  }: Props) => {
   gsap.registerPlugin(ScrollTrigger);
   const heroRef = useRef<HTMLElement>(null)
 
@@ -40,7 +43,7 @@ const Hero = () => {
             className="md:max-w-[80%] flex-1 self-center opacity-0
             relative z-10">
             <h1
-              className="font-bold tracking-tighter text-clamp-xl
+              className="font-bold tracking-tighter text-clamp-md md:text-clamp-xl
               text-white leading-none">
               Book Your Healthcare Appointments with Ease
             </h1>
@@ -58,6 +61,8 @@ const Hero = () => {
 }
 
 const HeroImageSection = () => {
+  const { openModal } = useGetStartedStore()
+
   return (
     <div
       data-hero-image
@@ -77,6 +82,7 @@ const HeroImageSection = () => {
           <div className="flex-1 flex overflow-x-hidden rounded-lg">
             <button
               data-cta
+              onClick={openModal}
               className="flex-1 p-2 flex justify-between items-center pl-6
               bg-yale-blue/30 rounded-lg text-3xl backdrop-blur
               text-mindaro-900 font-semibold shadow-lg shadow-yale-blue/30">

@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useAuthContext } from "@/context/auth"
+import useGetStartedStore from "@/stores/get-started"
+import SignInOrSignup from "@/components/SignUporIn"
 
 type Props = {
 
@@ -42,16 +44,15 @@ export default GetStarted
 
 
 function DrawerDialogDemo() {
-  const [open, setOpen] = useState(false)
-  const isDesktop = useMediaQuery("(min-width: 768px)")
+  const isDesktop = useMediaQuery("(min-width: 768px)")  
+  const { showModal, openModal, closeModal } = useGetStartedStore()
 
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
+      <Dialog open={showModal} onOpenChange={(open) => open ? openModal() : closeModal()}>
+        {/* <DialogTrigger asChild>
           <Button variant="outline">Register with passkey</Button>
-        </DialogTrigger>
-
+        </DialogTrigger> */}
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Lets get started</DialogTitle>
@@ -59,14 +60,14 @@ function DrawerDialogDemo() {
               Let's get started with your profile.
             </DialogDescription>
           </DialogHeader>
-          <RegisterForm />
+          <SignInOrSignup />
         </DialogContent>
       </Dialog>
     )
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={showModal} onOpenChange={(open) => open ? openModal() : closeModal()}>
       <DrawerTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DrawerTrigger>
@@ -77,7 +78,10 @@ function DrawerDialogDemo() {
             Make changes to your profile here. Click save when you're done.
           </DrawerDescription>
         </DrawerHeader>
-        <RegisterForm className="px-4" />
+
+        <SignInOrSignup />
+
+        {/* <RegisterForm className="px-4" /> */}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -85,31 +89,5 @@ function DrawerDialogDemo() {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
-}
-
-function RegisterForm({ className }: React.ComponentProps<"form">) {
-  const { signup, isRegistrationFetching } = useAuthContext()
-
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const email = e.currentTarget.email.value
-    await signup(email)
-  }
-
-  return (
-    <form
-      onSubmit={handleSignup}
-      className={cn("grid items-start gap-4", className)}>
-      <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" defaultValue="shadcn@example.com" />
-      </div>
-      {/* <div className="grid gap-2">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" defaultValue="@shadcn" />
-      </div> */}
-      <Button type="submit">Sign up {isRegistrationFetching && '...'}</Button>
-    </form>
   )
 }

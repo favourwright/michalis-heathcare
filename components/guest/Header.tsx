@@ -8,8 +8,12 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NoiseDark from "@/components/common/NoiseDark"
 import Button from "@/components/common/Button"
+import useGetStartedStore from "@/stores/get-started"
 
-const Header = () => {
+type Props = {
+}
+
+const Header = ({  }: Props) => {
   gsap.registerPlugin(ScrollTrigger);
   const headerRef = useRef<HTMLElement>(null)
 
@@ -24,6 +28,8 @@ const Header = () => {
     return () => context.revert()
   }, [])
 
+  const { openModal } = useGetStartedStore()
+
   return (
     <header
       ref={headerRef}
@@ -37,7 +43,7 @@ const Header = () => {
           <Logo priority />
         </NextLink>
 
-        <Button>Find a Doctor</Button>
+        <Button onClick={openModal}>Find a Doctor</Button>
       </DefaultMaxWidth>
       <hr data-hr className="border border-mindaro opacity-0 relative z-10 origin-left" />
       <div data-bg className="absolute inset-0 pointer-events-none" />

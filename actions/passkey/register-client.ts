@@ -15,11 +15,13 @@ export const signChallenge = async (optionsJSON: any) => {
 }
 
 export const signupWithPasskey = async (
-  {identifier, challengeFn, verifyFn}:
+  {identifier, challengeFn, verifyFn, onSuccess, onError}:
   {
     identifier: string
     challengeFn: UseMutateFunction<any, Error, string, unknown>
     verifyFn: UseMutateFunction<any, Error, Omit<RegistrationChallengeVerifiicationDTO, 'identifier'> & { identifier: string }, unknown>
+    onSuccess?: (message: string) => void
+    onError?: (error: Error) => void
   }
 ) => {
   try {
@@ -31,7 +33,7 @@ export const signupWithPasskey = async (
 
     challengeFn(identifier, {
       onSuccess: async (response) => {
-        console.log('Challenge fetched:', response);
+        // console.log('Challenge fetched:', response);
         const signedResponse = await signChallenge(response?.data?.options);
 
         // Proceed to verify the challenge
@@ -44,26 +46,35 @@ export const signupWithPasskey = async (
             overridePasskeys: !!passkeyDetails
           },
           {
-            onSuccess: (verifyData) => {
-              console.log('Challenge verified successfully:', verifyData);
+            onSuccess: async (verifyData) => {
+              // console.log('Challenge verified successfully:', verifyData);
 
               // TODO, fix this call. there are other preferred conditions that can
               // be satisfied here but not ideal
               // proceed to creating firebase user account
               // if overridePasskeys is false that means user is signing up afresh
-              fbSignup(identifier)
+              try {
+                await fbSignup(identifier)
+                onSuccess?.('User registered successfully, check your email to verify your account');
+              } catch (error) {
+                console.error({ userRegistrationError: error});
+                throw error
+              }
             },
             onError: (verifyError) => {
-              console.error('Verification failed:', verifyError);
+              onError?.(verifyError)
+              // console.error('Verification failed:', verifyError);
             },
           }
         );
       },
       onError: (fetchError) => {
-        console.error('Failed to fetch challenge:', fetchError);
+        onError?.(fetchError)
+        // console.error('Failed to fetch challenge:', fetchError);
       },
     });
   } catch (error) {
+    onError?.(error as Error)
     console.error({ userRegistrationError: error});
     throw error
   }

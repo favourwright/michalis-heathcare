@@ -1,7 +1,7 @@
 import { auth } from "@/firebase";
 import { db } from "@/firebase";
 import { UserData } from "@/types/auth";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, DocumentSnapshot, getDoc, Timestamp, updateDoc } from "firebase/firestore";
 import crypto from 'crypto';
 
@@ -16,6 +16,7 @@ export const fbSignup = async (email: string) => {
     client: btoa(password), // store password in base64
     updatedAt: Timestamp.now(),
   });
+  await sendEmailVerification(user.user);
 
   return user
 }
@@ -24,7 +25,13 @@ export const fbLogin = async (
   { email, password, onSuccess }:
   { email: string, password: string, onSuccess?: () => Promise<void>}
 ) => {
-  const user = await signInWithEmailAndPassword(auth, email, atob(password));
+  const userCredentials = await signInWithEmailAndPassword(auth, email, atob(password));
+
+  // check that user email is verified, else, logout user and throw error
+  if (!userCredentials.user.emailVerified) {
+    await signOut(auth);
+    throw new Error("Please verify your email address");
+  }
   // const userRef = doc(db, userColledtion, email);
   // await updateDoc(userRef, {
   //   email,
@@ -32,7 +39,7 @@ export const fbLogin = async (
   // });
 
   await onSuccess?.();
-  return user
+  return userCredentials
 }
 
 export const fbLogout = async ({onSuccess}: {onSuccess?: () => Promise<void>}) => {
@@ -51,4 +58,10 @@ export const fetchUserDetails = async (email: string) => {
 
 function generateSecurePassword(length = 16) {
   return crypto.randomBytes(length).toString('base64').slice(0, length);
+}
+
+export const isCurrentUserEmailVerified = async () => {
+  const userCredentials = auth.currentUser;
+  if (!userCredentials) return false
+  return userCredentials.emailVerified
 }

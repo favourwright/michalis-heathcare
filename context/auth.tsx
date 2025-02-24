@@ -1,5 +1,5 @@
 'use client'
-import { fetchUserDetails } from "@/actions/firestore/auth";
+import { fbLogout, fetchUserDetails } from "@/actions/firestore/auth";
 import { updateUserEmailIsVerified } from "@/actions/firestore/passkey";
 import { auth } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -8,7 +8,15 @@ import {
   useChallenge as useRegistrationChallenge,
   useVerifyChallenge as useRegistrationVerifyChallenge,
 } from '@/hooks/usePasskeyRegistration';
+import {
+  useChallenge as useAuthenticationChallenge,
+  useVerifyChallenge as useAuthenticationVerifyChallenge,
+} from '@/hooks/usePasskeyVerification';
 import { signupWithPasskey } from "@/actions/passkey/register-client";
+import { loginWithPasskey } from "@/actions/passkey/authenticate-client";
+import { useToast } from "@/hooks/use-toast";
+import useGetStartedStore from "@/stores/get-started";
+
 
 type AuthContextType = {
   currentUser: any
@@ -16,9 +24,11 @@ type AuthContextType = {
   isBootstrappingAuth: boolean
   isRegistrationFetching: boolean
   isRegistrationVerifying: boolean
+  isLoginFetching: boolean
+  isLoginVerifying: boolean
   signup: (email: string) => Promise<any>
   login: (email: string) => Promise<any>
-  // logout: () => void
+  logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,12 +47,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { mutate: verifyRegistrationChallenge, isPending: isRegistrationVerifying } = useRegistrationVerifyChallenge();
 
   // login
-  
+  const { mutate: fetchLoginChallenge, isPending: isLoginFetching } = useAuthenticationChallenge();
+  const { mutate: verifyLoginChallenge, isPending: isLoginVerifying } = useAuthenticationVerifyChallenge();
   
   const [isBootstrappingAuth, setIsBootstrappingAuth] = useState(true);
   // firebase user data: TODO: add proper type
   const [currentUser, setCurrentUser] = useState<any>(null); // basic firebase user info
   const [userDetails, setUserDetails] = useState<any>(null);
+
+  // toast hook
+  const { toast } = useToast()
+  const { closeModal } = useGetStartedStore()
+
 
   const value:AuthContextType = {
     currentUser,
@@ -50,17 +66,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isBootstrappingAuth,
     isRegistrationFetching,
     isRegistrationVerifying,
+    isLoginFetching,
+    isLoginVerifying,
     signup: async (email: string) => await signupWithPasskey({
       identifier: email,
       challengeFn: fetchRegistrationChallenge,
-      verifyFn: verifyRegistrationChallenge
+      verifyFn: verifyRegistrationChallenge,
+      onSuccess: async (message) => {
+        // show success message
+        toast({ title: 'success', description: message });
+        closeModal(); // close "get started" modal
+      },
+      onError: async (error) => {
+        // show error message
+        toast({ title: 'error', description: error?.message || 'An error occurred, please try again' });
+      }
     }),
     
-    // login: async (email: string) => await loginWithPasskey(email),
-    login: async (email: string) => {},
-    // logout: () => fbLogout({
-    //   onSuccess: async () => setUserDetails(null)
-    // }),
+    login: async (email: string) => await loginWithPasskey({
+      identifier: email,
+      challengeFn: fetchLoginChallenge,
+      verifyFn: verifyLoginChallenge,
+      onSuccess: async (message) => {
+        // show success message
+        toast({ title: 'success', description: message });
+        closeModal(); // close "get started" modal
+      },
+      onError: async (error) => {
+        // show error message
+        toast({ title: 'error', description: error?.message || 'An error occurred, please try again' });
+      }
+    }),
+    logout: () => fbLogout({
+      onSuccess: async () => setUserDetails(null)
+    }),
   };
 
   // setup firebase state change listener

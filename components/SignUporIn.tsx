@@ -10,6 +10,8 @@ import {
 import { useAuthContext } from "@/context/auth"
 import { useState } from "react"
 import { Icon } from "@iconify/react/dist/iconify.js"
+import { useToast } from "@/hooks/use-toast"
+
 
 enum FormType {
   LOGIN = 'login',
@@ -17,14 +19,22 @@ enum FormType {
 }
 
 const SignInOrSignup = () => {
-  const { signup, isRegistrationFetching } = useAuthContext()
+  const { signup, isRegistrationFetching, login, isLoginFetching } = useAuthContext()
   const [activeTab, setActiveTab] = useState(FormType.LOGIN)
+    const { toast } = useToast()
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const email = e.currentTarget.email.value
+    if(!email) {
+      toast({
+        title: "Urrrhh...",
+        description: "You need to provide an email address",
+      })
+      return
+    }
     if (activeTab === FormType.LOGIN) {
-      // login
+      await login(email)
       return
     }
     await signup(email)
@@ -54,7 +64,7 @@ const SignInOrSignup = () => {
         </div>
         <Button type="submit" className="capitalize">
           {
-            isRegistrationFetching ?
+            isRegistrationFetching || isLoginFetching ?
               <Icon icon="eos-icons:loading" className="animate-spin" /> :
               activeTab
           }

@@ -5,6 +5,7 @@ export type UserData = {
   email: string
   emailVerified?: boolean
   name: string
+  client: string // encoded client password
   passKeys: PublicKeyCredentialRequestOptionsJSON[] | WebAuthnCredential[]
   options: PublicKeyCredentialCreationOptions
   updatedAt: Timestamp

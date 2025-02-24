@@ -1,5 +1,4 @@
-import { Identifier, RegistrationChallengeVerifiicationDTO } from '@/types/auth';
-import { AuthenticationResponseJSON } from '@simplewebauthn/browser';
+import { AuthenticationChallengeVerifiicationDTO, Identifier } from '@/types/auth';
 import { useMutation } from '@tanstack/react-query';
 
 export const fetchChallenge = async (email: string): Promise<any> => {
@@ -25,7 +24,7 @@ export const verifyChallenge = async (
   {email, response}:
   {email: string, response: any}
 ) => {
-  const payload:RegistrationChallengeVerifiicationDTO = {
+  const payload:AuthenticationChallengeVerifiicationDTO = {
     identifier: {
       value: email,
       type: 'email',
@@ -42,6 +41,8 @@ export const verifyChallenge = async (
 
 export function useVerifyChallenge() {
   return useMutation({
-    mutationFn: ({email, response}: {email: string, response: AuthenticationResponseJSON}) => verifyChallenge({email, response})
+    mutationFn: (
+      {identifier, response}: Omit<AuthenticationChallengeVerifiicationDTO, 'identifier'> & { identifier: string }
+    ) => verifyChallenge({email:identifier, response})
   });
 }

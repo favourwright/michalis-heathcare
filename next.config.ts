@@ -13,6 +13,18 @@ const nextConfig: NextConfig = {
     AUTHN_RP_ID: process.env.AUTHN_RP_ID,
     AUTHN_ORIGIN: process.env.AUTHN_RP_ID === 'localhost' ? 'http://localhost:3000' : `https://${process.env.AUTHN_RP_ID}`
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com"
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com"
+      },
+    ]
+  }
 };
 
 export default nextConfig;

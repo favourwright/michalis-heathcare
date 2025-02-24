@@ -94,7 +94,7 @@ const Testimonial = ({}: Props) => {
             <CarouselDApiDemo emitActiveIndex={setCurrentTestimonial} />
           </div>
 
-          <div className='max-md:row-start-1 md:col-span-2'>
+          <div className='max-md:row-start-1 md:col-span-2 pointer-events-none'>
             <Carousel className="w-full" setApi={setApi}>
               <CarouselContent className="h-64">
                 {testimonialProfileImages.map((image, index) => (
@@ -125,13 +125,16 @@ export function CarouselDApiDemo({ emitActiveIndex }: { emitActiveIndex: (index:
   const [current, setCurrent] = React.useState(0)
   const [count, setCount] = React.useState(0)
  
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) return
  
     setCount(api.scrollSnapList().length)
     setCurrent(api.selectedScrollSnap() + 1)
  
-    api.on("select", () => setCurrent(api.selectedScrollSnap() + 1))
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1)
+      emitActiveIndex(api.selectedScrollSnap() + 1)
+    })
   }, [api])
 
   const handleNext = () => {

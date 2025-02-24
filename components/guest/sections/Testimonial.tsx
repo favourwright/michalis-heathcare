@@ -151,7 +151,7 @@ export function CarouselDApiDemo({ emitActiveIndex }: { emitActiveIndex: (index:
         <span className="text-3xl text-gray-600">{ current }</span> / { count }
       </span>
 
-      <div className="md:px-10 md:border-2 border-gray-100 rounded-2xl py-6">
+      <div className="md:px-10 md:border-2 border-gray-100 rounded-2xl max-md:pb-2 py-6">
         <Carousel
           setApi={setApi}
           className="w-full max-md:max-w-xs">
@@ -165,7 +165,7 @@ export function CarouselDApiDemo({ emitActiveIndex }: { emitActiveIndex: (index:
         </Carousel>
       </div>
 
-      <div className="flex gap-10 mt-10 text-2xl text-gray-600">
+      <div className="flex max-md:justify-between gap-10 mt-4 md:mt-10 text-2xl text-gray-600">
         <SeekBtns onClick={handlePrev}>
           <Icon icon="feather:chevron-left" />
         </SeekBtns>

@@ -45,7 +45,7 @@ const Footer = ({}: Props) => {
           paddingSides="xy"
           className="w-full flex gap-10 md:gap-20 flex-col relative text-white/90">
           <div className="w-full grid md:grid-cols-3 gap-3">
-            <p className="font-bold tracking-tighter leading-none text-clamp-md">Get Started today for free</p>
+            <p className="tracking-tighter leading-none text-clamp-md">Get Started today for free</p>
             
             <div className="md:col-start-3 flex flex-col md:items-start gap-8">
               <p className="font-medium">
@@ -63,7 +63,7 @@ const Footer = ({}: Props) => {
               <span className="font-bold leading-none text-clamp-sm">Links</span>
             </div>
 
-            <ul className="grid grid-cols-2 md:grid-cols-4 gap-2 text-2xl italic text-white/50">
+            <ul className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xl text-white/50">
               {links.map((link, i) => (
                 <FooterLinks key={i} {...link} />
               ))}

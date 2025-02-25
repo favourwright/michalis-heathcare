@@ -27,7 +27,7 @@ const Auth = () => {
             <h2 className="inline-flex whitespace-nowrap">
               <span className="whitespace-nowrap flex items-center mr-2.5">
                 Ex
-                <hr className="w-20 border-mindaro-300 border md:border-2" />
+                <hr className="w-12 md:w-20 border-mindaro-300 border md:border-2" />
                 pand
               </span>
               Your Practice<span className="text-mindaro-300">.</span>
@@ -40,7 +40,6 @@ const Auth = () => {
 
       <DefaultMaxWidth
         tag="div"
-        paddingSides="a"
         className="w-full grid md:grid-cols-2 gap-10">
         <div className='bg-gray-50 rounded-xl md:rounded-3xl h-full overflow-hidden max-md:h-32'>
           <Image
@@ -54,8 +53,7 @@ const Auth = () => {
         </div>
 
         <div>
-          <h2 className='leading-none text-2xl md:text-clamp-md text-gray-700'>Register</h2>
-
+          <h2 className='leading-none text-2xl md:text-clamp-sm text-gray-700'>Register</h2>
           <div className='mt-6 md:mt-10'>
             <SpecialistRegistrationForm />
           </div>

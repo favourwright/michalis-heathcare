@@ -70,7 +70,14 @@ export default {
   			'clamp-md': 'clamp(3rem, 4vw, 4rem)',
   			'clamp-lg': 'clamp(4rem, 6vw, 6rem)',
   			'clamp-xl': 'clamp(5rem, 8vw, 12rem)',
-  			'clamp-xxl': 'clamp(10rem, 24vw, 20rem)'
+  			'clamp-2xl': 'clamp(6rem, 10vw, 16rem)',
+				'clamp-3xl': 'clamp(7rem, 12vw, 20rem)',
+				'clamp-4xl': 'clamp(8rem, 14vw, 24rem)',
+				'clamp-5xl': 'clamp(9rem, 16vw, 28rem)',
+				'clamp-6xl': 'clamp(10rem, 18vw, 32rem)',
+				'clamp-7xl': 'clamp(11rem, 20vw, 36rem)',
+				'clamp-8xl': 'clamp(12rem, 22vw, 40rem)',
+				'clamp-9xl': 'clamp(13rem, 24vw, 44rem)',
   		},
   		keyframes: {
   			wiggle: {

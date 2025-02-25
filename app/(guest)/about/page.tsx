@@ -55,7 +55,7 @@ const About = () => {
           <div className="grid md:grid-cols-3 gap-6 mt-4">
             {howItWorks.map((item, index) => (
               <div key={index} className="flex flex-col items-center">
-                <Icon icon={item.icon} className="text-6xl text-yale-blue-500" />
+                <Icon icon={item.icon} className="text-4xl md:text-6xl text-mindaro-100" />
                 <h4 className="mt-2 font-semibold">{item.title}</h4>
                 <p className="max-w-xs text-gray-600">{item.description}</p>
               </div>
@@ -148,7 +148,7 @@ const WhoWeAre = () => {
           onClick={()=>seek(index)}
           className={`rounded-full px-4 py-2 font-semibold text-sm
           capitalize transition-all duration-300
-          ${current === index + 1 ? 'bg-mindaro' : 'bg-mindaro-800'}`}>
+          ${current === index + 1 ? 'bg-gray-300' : 'bg-gray-100'}`}>
           {item.section}
         </button>)}
       </div>

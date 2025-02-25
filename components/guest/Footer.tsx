@@ -35,7 +35,7 @@ const Footer = ({}: Props) => {
         data-footer
         className="flex flex-row relative
         rounded-lg bg-yale-blue-200 overflow-hidden">
-        <span className="font-bold tracking-tighter text-clamp-xxl select-none
+        <span className="font-bold tracking-tighter text-clamp-9xl select-none
           text-white/5 leading-none absolute top-0 left-1/4 md:right-0 -translate-y-1/3">
           Doctor
         </span>
@@ -45,7 +45,7 @@ const Footer = ({}: Props) => {
           paddingSides="xy"
           className="w-full flex gap-10 md:gap-20 flex-col relative text-white/90">
           <div className="w-full grid md:grid-cols-3 gap-3">
-            <p className="tracking-tighter leading-none text-clamp-md">Get Started today for free</p>
+            <p className="tracking-tighter leading-none text-clamp-sm">Get Started today for free</p>
             
             <div className="md:col-start-3 flex flex-col md:items-start gap-8">
               <p className="font-medium">

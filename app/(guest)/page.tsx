@@ -10,8 +10,6 @@ const Page = () => {
   return (
     <div>
       <Hero />
-      {/* <WhyChooseUs />
-      <WaitingRoom /> */}
       <Testimonial />
       <Faq />
     </div>

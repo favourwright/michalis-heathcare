@@ -24,8 +24,8 @@ const Footer = ({}: Props) => {
       href: "/services"
     },
     {
-      title: "Contact",
-      href: "/contact"
+      title: "Specialists",
+      href: "/auth/specialists-registration"
     },
   ]
 

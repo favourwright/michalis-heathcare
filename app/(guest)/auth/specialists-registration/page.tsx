@@ -141,7 +141,7 @@ const SpecialistRegistrationForm = () => {
             <Label className="pl-1" htmlFor="specialty">Specialty</Label>
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder="Select a specialty" />
+                <SelectValue placeholder="Select specialty" />
               </SelectTrigger>
               <SelectContent>
                 {specializations.map((specialization) => (

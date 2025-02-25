@@ -20,10 +20,6 @@ const Footer = ({}: Props) => {
       href: "/about"
     },
     {
-      title: "Services",
-      href: "/services"
-    },
-    {
       title: "Specialists",
       href: "/auth/specialists-registration"
     },
@@ -63,7 +59,7 @@ const Footer = ({}: Props) => {
               <span className="font-bold leading-none text-clamp-sm">Links</span>
             </div>
 
-            <ul className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xl text-white/50">
+            <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xl text-white/50">
               {links.map((link, i) => (
                 <FooterLinks key={i} {...link} />
               ))}

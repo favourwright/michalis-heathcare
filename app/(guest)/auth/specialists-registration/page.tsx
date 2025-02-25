@@ -65,6 +65,34 @@ const Auth = () => {
   )
 }
 
+const specializations = [
+  { value: "general_practitioner", title: "General Practitioner" },
+  { value: "cardiologist", title: "Cardiologist" },
+  { value: "dermatologist", title: "Dermatologist" },
+  { value: "endocrinologist", title: "Endocrinologist" },
+  { value: "gastroenterologist", title: "Gastroenterologist" },
+  { value: "neurologist", title: "Neurologist" },
+  { value: "oncologist", title: "Oncologist" },
+  { value: "ophthalmologist", title: "Ophthalmologist" },
+  { value: "orthopedic_surgeon", title: "Orthopedic Surgeon" },
+  { value: "otolaryngologist", title: "Otolaryngologist (ENT)" },
+  { value: "pediatrician", title: "Pediatrician" },
+  { value: "psychiatrist", title: "Psychiatrist" },
+  { value: "pulmonologist", title: "Pulmonologist" },
+  { value: "radiologist", title: "Radiologist" },
+  { value: "rheumatologist", title: "Rheumatologist" },
+  { value: "urologist", title: "Urologist" },
+  { value: "obstetrician_gynecologist", title: "Obstetrician/Gynecologist (OB/GYN)" },
+  { value: "nephrologist", title: "Nephrologist" },
+  { value: "allergist_immunologist", title: "Allergist/Immunologist" },
+  { value: "anesthesiologist", title: "Anesthesiologist" },
+  { value: "plastic_surgeon", title: "Plastic Surgeon" },
+  { value: "emergency_medicine_specialist", title: "Emergency Medicine Specialist" },
+  { value: "sports_medicine_specialist", title: "Sports Medicine Specialist" },
+  { value: "hematologist", title: "Hematologist" },
+  { value: "infectious_disease_specialist", title: "Infectious Disease Specialist" }
+]
+
 const SpecialistRegistrationForm = () => {
   return (
     <form onSubmit={()=>{}}>
@@ -115,61 +143,12 @@ const SpecialistRegistrationForm = () => {
             <Label className="pl-1" htmlFor="specialty">Specialty</Label>
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder="Select a timezone" />
+                <SelectValue placeholder="Select a specialty" />
               </SelectTrigger>
               <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>North America</SelectLabel>
-                  <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-                  <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-                  <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-                  <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-                  <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-                  <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Europe & Africa</SelectLabel>
-                  <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
-                  <SelectItem value="cet">Central European Time (CET)</SelectItem>
-                  <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
-                  <SelectItem value="west">
-                    Western European Summer Time (WEST)
-                  </SelectItem>
-                  <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
-                  <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Asia</SelectLabel>
-                  <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
-                  <SelectItem value="ist">India Standard Time (IST)</SelectItem>
-                  <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
-                  <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
-                  <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
-                  <SelectItem value="ist_indonesia">
-                    Indonesia Central Standard Time (WITA)
-                  </SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Australia & Pacific</SelectLabel>
-                  <SelectItem value="awst">
-                    Australian Western Standard Time (AWST)
-                  </SelectItem>
-                  <SelectItem value="acst">
-                    Australian Central Standard Time (ACST)
-                  </SelectItem>
-                  <SelectItem value="aest">
-                    Australian Eastern Standard Time (AEST)
-                  </SelectItem>
-                  <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
-                  <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>South America</SelectLabel>
-                  <SelectItem value="art">Argentina Time (ART)</SelectItem>
-                  <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
-                  <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
-                  <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
-                </SelectGroup>
+                {specializations.map((specialization) => (
+                  <SelectItem key={specialization.value} value={specialization.value}>{specialization.title}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

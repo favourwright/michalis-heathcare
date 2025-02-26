@@ -26,11 +26,10 @@ const Footer = ({}: Props) => {
   ]
 
   return (
-    <div className="bg-white px-3 pb-3">
+    <div className="bg-white">
       <div
         data-footer
-        className="flex flex-row relative
-        rounded-lg bg-yale-blue-200 overflow-hidden">
+        className="flex flex-row relative bg-yale-blue-200 overflow-hidden">
         <span className="font-bold tracking-tighter text-clamp-9xl select-none
           text-white/5 leading-none absolute top-0 left-1/4 md:right-0 -translate-y-1/3">
           Doctor

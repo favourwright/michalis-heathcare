@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation"
+
 const Dashboard = () => {
-  return (
-    <div>dashboard</div>
-  )
+  return redirect(`/app/booking`)
 }
 
 export default Dashboard

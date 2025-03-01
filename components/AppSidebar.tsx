@@ -1,3 +1,5 @@
+'use client'
+import { auth } from "@/firebase"
 import { Calendar, Home, Inbox, Search, Settings, ChevronUp, User2 } from "lucide-react"
 import {
   Sidebar,
@@ -12,6 +14,10 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import { signOut } from "firebase/auth"
+import { useRouter } from "next/navigation"
+import useUserStore from "@/stores/user"
+import { useAuthContext } from "@/context/auth"
 
 // Menu items.
 const items = [
@@ -20,15 +26,19 @@ const items = [
     url: "",
     icon: Home,
   },
-  {
-    title: "Inbox",
-    url: "inbox",
-    icon: Inbox,
-  },
 ]
 
 export function AppSidebar() {
   const appNameAlias = process.env.APP_NAME_ALIAS
+
+  const router = useRouter()
+  const { logout } = useAuthContext()
+  const { email } = useUserStore()
+
+  const signout = async () => {
+    await logout()
+    router.push("/")
+  }
 
   return (
     <Sidebar className="[&_*]:text-base">
@@ -40,7 +50,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={item.url === ""}>
+                  <SidebarMenuButton asChild isActive>
                     <Link href={`/app/${item.url}`}>
                       <item.icon className="text-black" />
                       <span className="text-gray-700 font-medium">{item.title}</span>
@@ -59,15 +69,12 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Username
+                  <User2 /> <span className="truncate font-semibold">{email}</span>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
-                <DropdownMenuItem>
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuItem onClick={signout}>
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

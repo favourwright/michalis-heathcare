@@ -16,7 +16,7 @@ import { signupWithPasskey } from "@/actions/passkey/register-client";
 import { loginWithPasskey } from "@/actions/passkey/authenticate-client";
 import { useToast } from "@/hooks/use-toast";
 import useGetStartedStore from "@/stores/get-started";
-
+import useUserStore from "@/stores/user"
 
 type AuthContextType = {
   currentUser: any
@@ -28,7 +28,7 @@ type AuthContextType = {
   isLoginVerifying: boolean
   signup: (email: string) => Promise<any>
   login: (email: string) => Promise<any>
-  logout: () => void
+  logout: () => Promise<any>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // toast hook
   const { toast } = useToast()
-  const { closeModal } = useGetStartedStore()
+  const { closeModal, setProcessing } = useGetStartedStore()
 
 
   const value:AuthContextType = {
@@ -76,10 +76,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // show success message
         toast({ title: 'success', description: message });
         closeModal(); // close "get started" modal
+        setProcessing(false)
       },
       onError: async (error) => {
         // show error message
         toast({ title: 'error', description: error?.message || 'An error occurred, please try again' });
+        setProcessing(false)
       }
     }),
     
@@ -91,17 +93,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // show success message
         toast({ title: 'success', description: message });
         closeModal(); // close "get started" modal
+        setProcessing(false)
       },
       onError: async (error) => {
         // show error message
         toast({ title: 'error', description: error?.message || 'An error occurred, please try again' });
+        setProcessing(false)
       }
     }),
-    logout: () => fbLogout({
+    logout: async () => await fbLogout({
       onSuccess: async () => setUserDetails(null)
     }),
   };
 
+  const { setUId, setEmail, updateIsVerified } = useUserStore()
   // setup firebase state change listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -111,6 +116,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // fetch user details
         if (user) {
+          setUId(user.uid);
+          setEmail(user.email as string);
+          updateIsVerified(user.emailVerified);
+
           const userDetails = await fetchUserDetails(user.email as string);
           if (userDetails) setUserDetails(userDetails);
         }

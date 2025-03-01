@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,7 +10,7 @@ import { useAuthContext } from "@/context/auth"
 import { useState } from "react"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { useToast } from "@/hooks/use-toast"
-
+import useGetStartedStore from "@/stores/get-started"
 
 enum FormType {
   LOGIN = 'login',
@@ -21,7 +20,8 @@ enum FormType {
 const SignInOrSignup = () => {
   const { signup, isRegistrationFetching, login, isLoginFetching } = useAuthContext()
   const [activeTab, setActiveTab] = useState(FormType.LOGIN)
-    const { toast } = useToast()
+  const { toast } = useToast()
+  const { setProcessing, processing } = useGetStartedStore()
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,6 +33,8 @@ const SignInOrSignup = () => {
       })
       return
     }
+
+    setProcessing(true)
     if (activeTab === FormType.LOGIN) {
       await login(email)
       return
@@ -64,7 +66,7 @@ const SignInOrSignup = () => {
         </div>
         <Button type="submit" className="capitalize">
           {
-            isRegistrationFetching || isLoginFetching ?
+            isRegistrationFetching || isLoginFetching || processing ?
               <Icon icon="eos-icons:loading" className="animate-spin" /> :
               activeTab
           }

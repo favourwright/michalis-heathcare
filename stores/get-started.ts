@@ -3,11 +3,13 @@ import { create } from 'zustand'
 export type GetStartedState = {
   showModal: boolean
   email: string
+  processing: boolean
 }
 
 export type GetStartedActions = {
   openModal: () => void
   closeModal: () => void
+  setProcessing: (processing: boolean) => void
 }
 
 export type GetStartedStore = GetStartedState & GetStartedActions
@@ -15,6 +17,7 @@ export type GetStartedStore = GetStartedState & GetStartedActions
 export const defaultInitState: GetStartedState = {
   showModal: false,
   email: '',
+  processing: false,
 }
 
 const useGetStartedStore = create<GetStartedStore>((set) => ({
@@ -22,6 +25,7 @@ const useGetStartedStore = create<GetStartedStore>((set) => ({
   openModal: () => set({ showModal: true }),
   closeModal: () => set({ showModal: false }),
   setEmail: (email: string) => set({ email }),
+  setProcessing: (processing: boolean) => set({ processing }),
 }))
 
 export default useGetStartedStore

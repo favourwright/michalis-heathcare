@@ -15,13 +15,14 @@ export const signChallenge = async (optionsJSON: any):Promise<AuthenticationResp
 }
 
 export const loginWithPasskey = async (
-  {identifier, challengeFn, verifyFn, onSuccess, onError}:
+  {identifier, challengeFn, verifyFn, onSuccess, onError, onComplete}:
   {
     identifier: string
     challengeFn: UseMutateFunction<any, Error, string, unknown>
     verifyFn: UseMutateFunction<any, Error, Omit<AuthenticationChallengeVerifiicationDTO, 'identifier'> & { identifier: string }, unknown>
     onSuccess?: (message: string) => void
     onError?: (error: Error) => void
+    onComplete?: () => void
   }
 ) => {
   try {
@@ -74,5 +75,7 @@ export const loginWithPasskey = async (
   } catch (error) {
     console.error({ passkeyAuthenticationError: error});
     onError?.(error as Error);
+  } finally {
+    onComplete?.();
   }
 }

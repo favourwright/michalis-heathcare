@@ -9,6 +9,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NoiseDark from "@/components/common/NoiseDark"
 import Button from "@/components/common/Button"
 import useGetStartedStore from "@/stores/get-started"
+import useUserStore from "@/stores/user"
+import { Icon } from "@iconify/react"
+import Link from "next/link"
 
 type Props = {
 }
@@ -29,6 +32,7 @@ const Header = ({  }: Props) => {
   }, [])
 
   const { openModal } = useGetStartedStore()
+  const { email, isVerified } = useUserStore()
 
   return (
     <header
@@ -43,7 +47,16 @@ const Header = ({  }: Props) => {
           <Logo priority />
         </NextLink>
 
-        <Button onClick={openModal}>Find a Doctor</Button>
+        <div className="flex gap-4 items-center">
+          {email && isVerified && <Link
+            className="cursor-pointer flex gap-2 items-center justify-center h-10 w-10 rounded-full
+            bg-white text-yale-blue ring-2 ring-yale-blue"
+            href="/app">
+            <Icon icon="uim:user-md" className="text-2xl" />
+          </Link>}
+          <Button onClick={openModal}>Find a Doctor</Button>
+        </div>
+
       </DefaultMaxWidth>
       <hr data-hr className="border border-mindaro opacity-0 relative z-10 origin-left" />
       <div data-bg className="absolute inset-0 pointer-events-none" />

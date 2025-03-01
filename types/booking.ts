@@ -1,11 +1,13 @@
 export type BookingData = {
-  id: string;
+  id?: string;
   patient: string;
-  specialist?: string;
+  specialist: string | null;
+  specialization: string | null;
   consultationSummary?: string;
-  date: string;
-  createdAt: string;
-  updatedAt: string;
+  iKnowWhatImDoing?: boolean;
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
   status: BookingStatus;
 }
 

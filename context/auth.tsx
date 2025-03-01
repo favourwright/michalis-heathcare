@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }),
   };
 
-  const { setEmail, updateIsVerified } = useUserStore()
+  const { setUId, setEmail, updateIsVerified } = useUserStore()
   // setup firebase state change listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -116,6 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // fetch user details
         if (user) {
+          setUId(user.uid);
           setEmail(user.email as string);
           updateIsVerified(user.emailVerified);
 

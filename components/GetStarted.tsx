@@ -21,7 +21,6 @@ import useGetStartedStore from "@/stores/get-started"
 import SignInOrSignup from "@/components/SignUporIn"
 import useUserStore from "@/stores/user"
 import BookingForm from "@/components/BookingForm"
-import { Switch } from "@/components/ui/switch"
 
 type Props = {}
 

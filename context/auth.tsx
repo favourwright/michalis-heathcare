@@ -57,8 +57,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // toast hook
   const { toast } = useToast()
-  const { closeModal, setProcessing } = useGetStartedStore()
-
+  const { closeModal, setProcessing, reset: resetGetStarted } = useGetStartedStore()
+  const { setUId, setEmail, updateIsVerified, reset: resetUser } = useUserStore()
 
   const value:AuthContextType = {
     currentUser,
@@ -102,11 +102,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }),
     logout: async () => await fbLogout({
-      onSuccess: async () => setUserDetails(null)
+      onSuccess: async () => {
+        setUserDetails(null)
+        resetGetStarted()
+        resetUser()
+      }
     }),
   };
 
-  const { setUId, setEmail, updateIsVerified } = useUserStore()
   // setup firebase state change listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {

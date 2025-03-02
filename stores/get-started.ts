@@ -10,6 +10,7 @@ export type GetStartedActions = {
   openModal: () => void
   closeModal: () => void
   setProcessing: (processing: boolean) => void
+  reset: () => void
 }
 
 export type GetStartedStore = GetStartedState & GetStartedActions
@@ -26,6 +27,7 @@ const useGetStartedStore = create<GetStartedStore>((set) => ({
   closeModal: () => set({ showModal: false }),
   setEmail: (email: string) => set({ email }),
   setProcessing: (processing: boolean) => set({ processing }),
+  reset: () => set(defaultInitState),
 }))
 
 export default useGetStartedStore

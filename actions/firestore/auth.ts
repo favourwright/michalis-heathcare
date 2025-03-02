@@ -38,6 +38,9 @@ export const fbLogin = async (
   { email, password, isSpecialist, onSuccess }:
   { email: string, password: string, isSpecialist?: boolean, onSuccess?: () => Promise<void>}
 ) => {
+  const specialist = await fetchSpecialistDetails(email)
+  if (!specialist) throw new Error("Specialist not found")
+
   const cypherPass = isSpecialist ? password : atob(password)
   const userCredentials = await signInWithEmailAndPassword(auth, email, cypherPass);
 
@@ -59,6 +62,14 @@ export const fbLogout = async ({onSuccess}: {onSuccess?: () => Promise<void>}) =
 export const fetchUserDetails = async (email: string) => {
   const userRef = doc(db, userColledtion, email);
   const docSnap = await getDoc(userRef) as DocumentSnapshot<UserData>
+  
+  if (!docSnap.exists()) return
+  return docSnap.data()
+}
+
+export const fetchSpecialistDetails = async (email: string) => {
+  const userRef = doc(db, specialistCollection, email);
+  const docSnap = await getDoc(userRef) as DocumentSnapshot<SpecialistInfo>
   
   if (!docSnap.exists()) return
   return docSnap.data()

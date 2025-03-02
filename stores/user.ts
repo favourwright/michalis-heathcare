@@ -10,6 +10,7 @@ export type GetStartedActions = {
   setUId: (uid: string) => void
   setEmail: (email: string) => void
   updateIsVerified: (isVerified: boolean) => void
+  reset: () => void
 }
 
 export type UserStore = UserState & GetStartedActions
@@ -25,6 +26,7 @@ const useUserStore = create<UserStore>((set) => ({
   setUId: (uid: string) => set({ uid }),
   setEmail: (email: string) => set({ email }),
   updateIsVerified: (isVerified: boolean) => set({ isVerified }),
+  reset: () => set(defaultInitState),
 }))
 
 export default useUserStore

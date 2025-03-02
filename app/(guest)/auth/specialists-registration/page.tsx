@@ -20,6 +20,7 @@ import { SpecialistInfo } from "@/types/specialist"
 import { fbLogin, fbSignup, saveSpecialistInfo } from "@/actions/firestore/auth"
 import { useToast } from "@/hooks/use-toast"
 import { Icon } from "@iconify/react"
+import { useRouter } from "next/navigation"
 
 const Auth = () => {
   const [api, setApi] = useState<CarouselApi>()
@@ -277,6 +278,8 @@ const SpecialistLogin = () => {
     password: '',
   })
   const [processing, setProcessing] = useState(false)
+  const router = useRouter()
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setProcessing(true)
@@ -289,15 +292,16 @@ const SpecialistLogin = () => {
       })
       // reset form
       setForm({ email: '', password: '' })
+      router.push("/app/booking")
       toast({
         title: "Login successful",
         description: "You can now login to your account",
       })
-    } catch (error) {
+    } catch (error: any) {
       console.error({ userRegistrationError: error});
       toast({
         title: "Error",
-        description: "An error occurred, please try again",
+        description: error?.message || "An error occurred, please try again",
       })
     } finally {
       setProcessing(false)

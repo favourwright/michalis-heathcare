@@ -164,7 +164,7 @@ export default function PaymentCard({
             transition-all duration-300 ease-in-out md:row-start-3">
             {updatingStatus ? 'Updating...' : 'Accept'}
           </button>}
-          {isPatient && (status === BookingStatus.UPCOMING) && <button
+          {isPatient && (status === BookingStatus.UPCOMING || status === BookingStatus.PENDING) && <button
             onClick={handleCancel}
             className="bg-white hover:bg-red-300 rounded-lg p-2 transition-all
             duration-300 ease-in-out md:row-start-3">

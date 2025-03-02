@@ -51,6 +51,10 @@ export default function PaymentCard({
         </div>
 
         <div className="flex-1 flex max-md:flex-col items-center px-4">
+          <div className="flex items-center">
+            {/* <Icon icon={"icon-park-solid:check-one"} className="w-6 h-6 text-yale-blue-600" /> */}
+            {/* <Icon icon={"material-symbols:timer-rounded"} className="w-6 h-6 text-gray-400" /> */}
+          </div>
           <div className={`flex-1 flex md:px-3 text-gray-600 ${isExpanded ? 'text-black' : ''}`}>
             <span className='pl-2'>{summary}</span>
           </div>

@@ -2,41 +2,50 @@ import { auth } from "@/firebase";
 import { db } from "@/firebase";
 import { UserData } from "@/types/auth";
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, DocumentSnapshot, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, DocumentSnapshot, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { SpecialistInfo } from "@/types/specialist";
 import crypto from 'crypto';
 
 const userColledtion = "users"; // where to store user data
 const passkeyCollection = "passkeys"
 
-export const fbSignup = async (email: string) => {
-  const password = generateSecurePassword();
-  const user = await createUserWithEmailAndPassword(auth, email, password);
+export const fbSignup = async (email: string, password?: string, isSpecialist?: boolean) => {
+  const pass = password || generateSecurePassword();
+  const user = await createUserWithEmailAndPassword(auth, email, pass);
   const ref = doc(db, passkeyCollection, email);
-  await updateDoc(ref, {
-    client: btoa(password), // store password in base64
-    updatedAt: Timestamp.now(),
-  });
+  if(!isSpecialist) {
+    await updateDoc(ref, {
+      client: btoa(pass), // store password in base64
+      updatedAt: Timestamp.now(),
+    });
+  }
   await sendEmailVerification(user.user);
 
   return user
 }
 
+const specialistCollection = "specialists"
+export const saveSpecialistInfo = async (payload: Omit<SpecialistInfo, 'id' | 'createdAt' | 'updatedAt'>)=>{
+  const ref = doc(db, specialistCollection, payload.email);
+  await setDoc(ref, {
+    ...payload,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  })
+}
+
 export const fbLogin = async (
-  { email, password, onSuccess }:
-  { email: string, password: string, onSuccess?: () => Promise<void>}
+  { email, password, isSpecialist, onSuccess }:
+  { email: string, password: string, isSpecialist?: boolean, onSuccess?: () => Promise<void>}
 ) => {
-  const userCredentials = await signInWithEmailAndPassword(auth, email, atob(password));
+  const cypherPass = isSpecialist ? password : atob(password)
+  const userCredentials = await signInWithEmailAndPassword(auth, email, cypherPass);
 
   // check that user email is verified, else, logout user and throw error
   if (!userCredentials.user.emailVerified) {
     await signOut(auth);
     throw new Error("Please verify your email address");
   }
-  // const userRef = doc(db, userColledtion, email);
-  // await updateDoc(userRef, {
-  //   email,
-  //   updatedAt: Timestamp.now(),
-  // });
 
   await onSuccess?.();
   return userCredentials

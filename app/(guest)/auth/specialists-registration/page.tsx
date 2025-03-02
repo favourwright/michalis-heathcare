@@ -14,8 +14,29 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { specializations } from "@/data/specialist"
+import { useEffect, useState } from "react"
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel"
+import { SpecialistInfo } from "@/types/specialist"
+import { fbLogin, fbSignup, saveSpecialistInfo } from "@/actions/firestore/auth"
+import { useToast } from "@/hooks/use-toast"
+import { Icon } from "@iconify/react"
 
 const Auth = () => {
+  const [api, setApi] = useState<CarouselApi>()
+  const [formType, setFormType] = useState<'register' | 'login'>('register')
+  useEffect(() => {
+    if (!api) return
+    api.scrollTo(formType === 'register' ? 0 : 1)
+  }, [formType])
+
+  useEffect(() => {
+    if (!api) return
+    api.on("select", () => {
+      const selected = api.selectedScrollSnap() + 1
+      setFormType(selected === 1 ? 'register' : 'login')
+    })
+  }, [api])
+  
   return (
     <div>
       <div className="pt-20 md:pt-28 bg-tiffany-blue-100">
@@ -54,9 +75,32 @@ const Auth = () => {
         </div>
 
         <div>
-          <h2 className='leading-none text-2xl md:text-clamp-sm text-gray-700'>Register</h2>
+          <div className="flex items-end gap-4 [&>button]:transition-all [&>button]:duration-300 font-semibold">
+            <button
+              className={`leading-none text-lg max-md:flex-1 px-3 p-2 rounded-2xl bg-yale-blue text-white
+              ${formType !== 'register' && 'opacity-30'}`}
+              onClick={() => setFormType('register')}>
+              Register
+            </button>
+            <button
+              className={`leading-none text-lg max-md:flex-1 px-3 p-2 rounded-2xl bg-yale-blue text-white
+              ${formType !== 'login' && 'opacity-30'}`}
+              onClick={() => setFormType('login')}>
+              Login
+            </button>
+          </div>
+          
           <div className='mt-6 md:mt-10'>
-            <SpecialistRegistrationForm />
+            <Carousel className="w-full mt-4 select-none" setApi={setApi}>
+              <CarouselContent>
+                <CarouselItem key={1}>
+                  <SpecialistRegistrationForm />
+                </CarouselItem>
+                <CarouselItem key={2}>
+                  <SpecialistLogin />
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
           </div>
         </div>
       </DefaultMaxWidth>
@@ -65,13 +109,63 @@ const Auth = () => {
 }
 
 const SpecialistRegistrationForm = () => {
+  const { toast } = useToast()
+  const [signingUp, setSigningUp] = useState(false)
+
+  const [form, setForm] = useState<Omit<SpecialistInfo, 'id' | 'createdAt' | 'updatedAt'>>({
+    firstname: '',
+    lastname: '',
+    email: '',
+    specialty: '',
+    license: '',
+    location: '',
+    password: ''
+  })
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setSigningUp(true)
+
+    try {
+      // signup with email and password
+      const user = await fbSignup(form.email, form.password, true)
+      // save rest of user info to firestore
+      await saveSpecialistInfo(form)
+      // reset form
+      setForm({
+        firstname: '',
+        lastname: '',
+        email: '',
+        specialty: '',
+        license: '',
+        location: '',
+        password: ''
+      })
+
+      toast({
+        title: "Account created successfully",
+        description: "You can now login to your account",
+      })
+    } catch (error) {
+      console.error({ userRegistrationError: error});
+      toast({
+        title: "Error",
+        description: "An error occurred, please try again",
+      })
+    } finally {
+      setSigningUp(false)
+    }
+  }
+
   return (
-    <form onSubmit={()=>{}}>
-      <div className="grid gap-6">
+    <form onSubmit={handleRegister}>
+      <div className="grid gap-6 p-1">
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-1">
             <Label className="pl-1" htmlFor="firstname">Firstname</Label>
             <Input
+              value={form.firstname}
+              onChange={(e) => setForm({ ...form, firstname: e.target.value })}
               type="text"
               id="firstname"
               name="firstname"
@@ -82,6 +176,8 @@ const SpecialistRegistrationForm = () => {
           <div className="grid gap-1">
             <Label className="pl-1" htmlFor="lastname">Lastname</Label>
             <Input
+              value={form.lastname}
+              onChange={(e) => setForm({ ...form, lastname: e.target.value })}
               type="text"
               id="lastname"
               name="lastname"
@@ -94,10 +190,25 @@ const SpecialistRegistrationForm = () => {
         <div className="grid gap-1">
           <Label className="pl-1" htmlFor="email">Email</Label>
           <Input
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             type="email"
             id="email"
             name="email"
             placeholder="Enter your email address"
+            required
+          />
+        </div>
+
+        <div className="grid gap-1">
+          <Label className="pl-1" htmlFor="password">Password</Label>
+          <Input
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            type="text"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
             required
           />
         </div>
@@ -112,7 +223,7 @@ const SpecialistRegistrationForm = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-1">
             <Label className="pl-1" htmlFor="specialty">Specialty</Label>
-            <Select>
+            <Select value={form.specialty} onValueChange={(e) => setForm({ ...form, specialty: e })}>
               <SelectTrigger>
                 <SelectValue placeholder="Select specialty" />
               </SelectTrigger>
@@ -127,6 +238,8 @@ const SpecialistRegistrationForm = () => {
           <div className="grid gap-1">
             <Label className="pl-1" htmlFor="license">License</Label>
             <Input
+              value={form.license}
+              onChange={(e) => setForm({ ...form, license: e.target.value })}
               type="text"
               id="license"
               name="license"
@@ -139,6 +252,8 @@ const SpecialistRegistrationForm = () => {
         <div className="grid gap-1">
           <Label className="pl-1" htmlFor="location">Location</Label>
           <Input
+            value={form.location}
+            onChange={(e) => setForm({ ...form, location: e.target.value })}
             type="text"
             id="location"
             name="location"
@@ -147,14 +262,81 @@ const SpecialistRegistrationForm = () => {
           />
         </div>
 
-        <Button
-          type="submit" variant="default" size="default">
-          Register
+        <Button type="submit" variant="default" size="default">
+          {signingUp ? <Icon icon="eos-icons:loading" className="animate-spin" /> : "Register"}
         </Button>
       </div>
     </form>    
   )
 }
-  
+
+const SpecialistLogin = () => {
+  const { toast } = useToast()
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  })
+  const [processing, setProcessing] = useState(false)
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setProcessing(true)
+
+    try {
+      await fbLogin({
+        email: form.email,
+        password: form.password,
+        isSpecialist: true
+      })
+      toast({
+        title: "Login successful",
+        description: "You can now login to your account",
+      })
+    } catch (error) {
+      console.error({ userRegistrationError: error});
+      toast({
+        title: "Error",
+        description: "An error occurred, please try again",
+      })
+    } finally {
+      setProcessing(false)
+    }
+  }
+
+  return (
+    <form onSubmit={handleLogin}>
+      <div className="grid gap-6 p-1">
+        <div className="grid gap-1">
+          <Label className="pl-1" htmlFor="email">Email</Label>
+          <Input
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email address"
+            required
+          />
+        </div>
+
+        <div className="grid gap-1">
+          <Label className="pl-1" htmlFor="password">Password</Label>
+          <Input
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <Button type="submit" variant="default" size="default">
+          {processing ? <Icon icon="eos-icons:loading" className="animate-spin" /> : "Login"}
+        </Button>
+      </div>
+    </form>
+  )
+}
 
 export default Auth

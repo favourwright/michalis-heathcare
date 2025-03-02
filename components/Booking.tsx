@@ -174,17 +174,17 @@ export default function PaymentCard({
             onClick={handleSetMeetingLink}
             className="bg-yale-blue text-white rounded-lg p-2
             transition-all duration-300 ease-in-out md:row-start-3
-            flex gap-3">
+            flex max-md:flex-col items-center gap-2">
             <input
               value={meetingLinkForm}
               onClick={(e) => e.stopPropagation()}
               onChange={(e) => setMeetingLinkForm(e.target.value)}
               className='flex-1 rounded-sm outline-none placeholder:text-gray-400
-              text-gray-600 px-1'
+              text-gray-600 px-1 w-full'
               placeholder='Meeting url'
               type="url"
             />
-            {updatingMeetingUrl ? 'Updating...' : 'Set meeting link'}
+            <span>{updatingMeetingUrl ? 'Updating...' : 'Set meeting link'}</span>
           </button>}
         </div>
       </div>

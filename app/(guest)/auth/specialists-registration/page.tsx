@@ -145,7 +145,7 @@ const SpecialistRegistrationForm = () => {
 
       toast({
         title: "Account created successfully",
-        description: "You can now login to your account",
+        description: "Check your email to verify your account then login",
       })
     } catch (error) {
       console.error({ userRegistrationError: error});

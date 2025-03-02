@@ -153,9 +153,9 @@ export default function PaymentCard({
           </div>
           <div className="grid md:grid-cols-4 bg-white rounded-lg p-2">
             <span className="text-gray-400">Meeting</span>
-            <span className="md:col-span-3 text-gray-600 truncate">
-              {meetingLinkDetails}
-            </span>
+            {meetingLink ? <a href={meetingLink} target='_blank' className="md:col-span-3 text-gray-600 truncate underline">
+              {meetingLink}
+            </a> : <span className="md:col-span-3 text-gray-600">No meeting link</span>}
           </div>
 
           {isSpecialist && (status === BookingStatus.PENDING) && <button

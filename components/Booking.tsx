@@ -28,7 +28,7 @@ export default function PaymentCard({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const dayText = useMemo(() => moment(date).format('ddd'), [date]);
-  const dayNumber = useMemo(() => moment(date).format('D'), [date]);
+  const dayNumber = useMemo(() => moment(date).format('DD'), [date]);
   
   const summary = useMemo(() => {
     return specialization ?

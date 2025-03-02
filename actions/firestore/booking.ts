@@ -41,7 +41,7 @@ export const fetchUserBookings = async (uid: string): Promise<BookingData[]> => 
 export const fetchAllBookings = async (): Promise<BookingData[]> => {
   // fetch all bookings that are not completed or canceled
   const ref = collection(db, bookingCollection);
-  const q = query(ref, where("status", "not-in", [BookingStatus.COMPLETED, BookingStatus.CANCELLED]));
+  const q = query(ref, where("status", "not-in", [BookingStatus.CANCELLED]));
   const querySnapshot = await getDocs(q);
 
   const data: BookingData[] = querySnapshot.docs.map((doc) => {

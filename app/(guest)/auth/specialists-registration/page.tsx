@@ -287,6 +287,8 @@ const SpecialistLogin = () => {
         password: form.password,
         isSpecialist: true
       })
+      // reset form
+      setForm({ email: '', password: '' })
       toast({
         title: "Login successful",
         description: "You can now login to your account",

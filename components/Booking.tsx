@@ -1,10 +1,9 @@
 'use client';
-
 import { useState, useMemo } from 'react';
 import moment from 'moment';
 import { ChevronDown } from 'lucide-react';
 import { BookingData, BookingStatus } from '@/types/booking';
-import { updateBookingStatus } from '@/actions/firestore/booking';
+import { setMeetingUrl, updateBookingStatus } from '@/actions/firestore/booking';
 import { useToast } from "@/hooks/use-toast";
 // import { Icon } from '@iconify/react';
 
@@ -12,6 +11,7 @@ type PaymentCardProps = {
   isSpecialist: boolean
   isPatient: boolean
   updateStatus: (id: string, status: BookingStatus) => Promise<void>
+  updateMeetingLink: (id: string, meetingLink: string) => Promise<void>
 } & Pick<BookingData, 'id' | 'date' | 'specialization' | 'consultationSummary' | 'meetingLink' | 'status'>
 
 export default function PaymentCard({
@@ -23,7 +23,8 @@ export default function PaymentCard({
   isSpecialist,
   isPatient,
   updateStatus,
-  status
+  status,
+  updateMeetingLink
 }: PaymentCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -79,6 +80,29 @@ export default function PaymentCard({
       })
     } finally {
       setUpdatingStatus(false)
+    }
+  }
+
+  const [meetingLinkForm, setMeetingLinkForm] = useState('')
+  const [updatingMeetingUrl, setUpdatingMeetingUrl] = useState(false)
+  const handleSetMeetingLink = async () => {
+    setUpdatingMeetingUrl(true)
+    try {
+      updateMeetingLink?.(id!, meetingLinkForm)
+      await setMeetingUrl(id!, meetingLinkForm)
+      toast({
+        title: 'success',
+        description: 'Meeting link updated successfully'
+      })
+      setMeetingLinkForm('')
+    } catch (error) {
+      console.error({ error })
+      toast({
+        title: 'error',
+        description: 'Something went wrong'
+      })
+    } finally {
+      setUpdatingMeetingUrl(false)
     }
   }
 
@@ -145,6 +169,22 @@ export default function PaymentCard({
             className="bg-white hover:bg-red-300 rounded-lg p-2 transition-all
             duration-300 ease-in-out md:row-start-3">
             {updatingStatus ? 'Updating...' : 'Cancel'}
+          </button>}
+          {isSpecialist && (status !== BookingStatus.PENDING) && <button
+            onClick={handleSetMeetingLink}
+            className="bg-yale-blue text-white rounded-lg p-2
+            transition-all duration-300 ease-in-out md:row-start-3
+            flex gap-3">
+            <input
+              value={meetingLinkForm}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => setMeetingLinkForm(e.target.value)}
+              className='flex-1 rounded-sm outline-none placeholder:text-gray-400
+              text-gray-600 px-1'
+              placeholder='Meeting url'
+              type="url"
+            />
+            {updatingMeetingUrl ? 'Updating...' : 'Set meeting link'}
           </button>}
         </div>
       </div>

@@ -32,6 +32,19 @@ const BookingPage = () => {
 
     setBookings(newBookings)
   }
+  const updateMeetingLink = async (id: string, meetingLink: string) => {
+    const newBookings = bookings.map((booking) => {
+      if (booking.id === id) {
+        return {
+          ...booking,
+          meetingLink,
+        }
+      }
+      return booking
+    })
+
+    setBookings(newBookings)
+  }
 
   const [loading, setLoading] = useState(true)
   useEffect(() => {
@@ -93,6 +106,7 @@ const BookingPage = () => {
         {!loading && <BookingList
           list={filteredBookings}
           updateStatus={(id, status) => updateBookingStatus(id, status)}
+          updateMeetingLink={(id, meetingLink) => updateMeetingLink(id, meetingLink)}
         />}
       </DefaultMaxWidth>
     </div>
@@ -100,8 +114,12 @@ const BookingPage = () => {
 }
 
 const BookingList = (
-  {list, updateStatus}:
-  {list:BookingData[], updateStatus: (id: string, status: BookingStatus) => Promise<void>}
+  {list, updateStatus, updateMeetingLink}:
+  {
+    list:BookingData[],
+    updateStatus: (id: string, status: BookingStatus) => Promise<void>,
+    updateMeetingLink: (id: string, meetingLink: string) => Promise<void>
+  }
 ) => {
   const { uid, isSpecialist } = useUserStore()
 
@@ -118,6 +136,7 @@ const BookingList = (
         meetingLink={item.meetingLink}
         updateStatus={updateStatus}
         status={item.status}
+        updateMeetingLink={updateMeetingLink}
       />)}
     </div>
   )

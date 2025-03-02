@@ -10,7 +10,7 @@ export const createBooking = async (
   const ref = collection(db, bookingCollection); // Get a reference to the collection
   const docRef = await addDoc(ref, {
     ...booking,
-    status: BookingStatus.UPCOMING,
+    status: BookingStatus.PENDING,
     specialist: null,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
@@ -61,4 +61,9 @@ export const fetchAllBookings = async (): Promise<BookingData[]> => {
 export const updateBookingStatus = async (id: string, status: BookingStatus) => {
   const ref = doc(db, bookingCollection, id);
   await updateDoc(ref, { status });
+}
+
+export const setMeetingUrl = async (id: string, meetingUrl: string) => {
+  const ref = doc(db, bookingCollection, id);
+  await updateDoc(ref, { meetingLink: meetingUrl });
 }

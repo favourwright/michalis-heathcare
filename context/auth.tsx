@@ -1,5 +1,5 @@
 'use client'
-import { fbLogout, fetchUserDetails } from "@/actions/firestore/auth";
+import { fbLogout, fetchSpecialistDetails, fetchUserDetails } from "@/actions/firestore/auth";
 import { updateUserEmailIsVerified } from "@/actions/firestore/passkey";
 import { auth } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // toast hook
   const { toast } = useToast()
   const { closeModal, setProcessing, reset: resetGetStarted } = useGetStartedStore()
-  const { setUId, setEmail, updateIsVerified, reset: resetUser } = useUserStore()
+  const { setUId, setEmail, updateIsVerified, reset: resetUser, setIsSpecialist } = useUserStore()
 
   const value:AuthContextType = {
     currentUser,
@@ -125,6 +125,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
           const userDetails = await fetchUserDetails(user.email as string);
           if (userDetails) setUserDetails(userDetails);
+          else {
+            const specialistDetails = await fetchSpecialistDetails(user.email as string);
+            if (specialistDetails) setIsSpecialist(true);
+          }
         }
         // update email verified status if its not already true
         if (!user?.emailVerified) return

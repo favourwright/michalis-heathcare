@@ -39,7 +39,7 @@ export const fbLogin = async (
   { email: string, password: string, isSpecialist?: boolean, onSuccess?: () => Promise<void>}
 ) => {
   const specialist = await fetchSpecialistDetails(email)
-  if (!specialist) throw new Error("Specialist not found")
+  if (isSpecialist && !specialist) throw new Error("Specialist not found")
 
   const cypherPass = isSpecialist ? password : atob(password)
   const userCredentials = await signInWithEmailAndPassword(auth, email, cypherPass);

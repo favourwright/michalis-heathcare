@@ -10,24 +10,42 @@ import Button from "@/components/common/Button"
 import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
 import useUserStore from "@/stores/user"
 import { BookingStatus, BookingData } from "@/types/booking"
-import { fetchUserBookings } from "@/actions/firestore/booking"
+import { fetchAllBookings, fetchUserBookings } from "@/actions/firestore/booking"
+import { useRouter } from "next/navigation"
 
 const BookingPage = () => {
   const [activeTab, setActiveTab] = useState(BookingStatus.UPCOMING)
 
-  const { uid } = useUserStore()
+  const { uid, isSpecialist } = useUserStore()
   const [bookings, setBookings] = useState<BookingData[]>([])
   const filteredBookings = bookings.filter((booking) => booking.status === activeTab)
+  const updateBookingStatus = async (id: string, status: BookingStatus) => {
+    const newBookings = bookings.map((booking) => {
+      if (booking.id === id) {
+        return {
+          ...booking,
+          status,
+        }
+      }
+      return booking
+    })
+
+    setBookings(newBookings)
+  }
+
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     (async ()=>{
       if(!uid) return
       setLoading(true)
-      const data = await fetchUserBookings(uid)
+      const data = isSpecialist ? await fetchAllBookings() : await fetchUserBookings(uid)
       setBookings(data)
       setLoading(false)
     })()
-  }, [uid])
+  }, [uid, isSpecialist])
+
+  const router = useRouter()
+  const startNewBooking = () => router.push("/")
 
   return (
     <div className="w-full">
@@ -37,7 +55,7 @@ const BookingPage = () => {
           <p className="text-gray-500 text-lg font-medium">See your scheduled events from your calendar events links.</p>
         </div>
 
-        <Button onClick={()=>{}}>New Booking</Button>
+        {!isSpecialist && uid && <Button onClick={startNewBooking}>New Booking</Button>}
       </DefaultMaxWidth>
 
       <DefaultMaxWidth withPadding={false} className="mt-6">
@@ -72,25 +90,34 @@ const BookingPage = () => {
             No Bookings
           </span>
         </div>}
-        {!loading && <BookingList list={filteredBookings} />}
+        {!loading && <BookingList
+          list={filteredBookings}
+          updateStatus={(id, status) => updateBookingStatus(id, status)}
+        />}
       </DefaultMaxWidth>
     </div>
   )
 }
 
-const BookingList = ({list}:{list:BookingData[]}) => {
-  const { uid } = useUserStore()
+const BookingList = (
+  {list, updateStatus}:
+  {list:BookingData[], updateStatus: (id: string, status: BookingStatus) => Promise<void>}
+) => {
+  const { uid, isSpecialist } = useUserStore()
 
   return (
     <div className="grid gap-3">
       {list.map((item,i)=><Booking
         key={i}
+        id={item.id}
         date={item.date}
         consultationSummary={item.consultationSummary}
         specialization={item.specialization}
-        isSpecialist={true}
+        isSpecialist={!!isSpecialist}
         isPatient={item.patient === uid}
         meetingLink={item.meetingLink}
+        updateStatus={updateStatus}
+        status={item.status}
       />)}
     </div>
   )

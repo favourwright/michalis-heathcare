@@ -3,21 +3,27 @@
 import { useState, useMemo } from 'react';
 import moment from 'moment';
 import { ChevronDown } from 'lucide-react';
-import { BookingData } from '@/types/booking';
-import { Icon } from '@iconify/react';
+import { BookingData, BookingStatus } from '@/types/booking';
+import { updateBookingStatus } from '@/actions/firestore/booking';
+import { useToast } from "@/hooks/use-toast";
+// import { Icon } from '@iconify/react';
 
 type PaymentCardProps = {
   isSpecialist: boolean
   isPatient: boolean
-} & Pick<BookingData, 'date' | 'specialization' | 'consultationSummary' | 'meetingLink'>
+  updateStatus: (id: string, status: BookingStatus) => Promise<void>
+} & Pick<BookingData, 'id' | 'date' | 'specialization' | 'consultationSummary' | 'meetingLink' | 'status'>
 
 export default function PaymentCard({
+  id,
   date,
   consultationSummary,
   specialization,
   meetingLink,
   isSpecialist,
-  isPatient
+  isPatient,
+  updateStatus,
+  status
 }: PaymentCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -34,18 +40,57 @@ export default function PaymentCard({
     return meetingLink ? meetingLink : 'Link Not provided yet'
   }, [meetingLink]);
 
+  const [updatingStatus, setUpdatingStatus] = useState(false)
+
+  const { toast } = useToast()
+  const handleAccept = async () => {
+    setUpdatingStatus(true)
+    try {
+      await updateBookingStatus(id!, BookingStatus.UPCOMING)
+      updateStatus?.(id!, BookingStatus.UPCOMING)
+      toast({
+        title: 'success',
+        description: 'Booking accepted successfully'
+      })
+    } catch (error) {
+      console.error({ error })
+      toast({
+        title: 'error',
+        description: 'Something went wrong'
+      })
+    } finally {
+      setUpdatingStatus(false)
+    }
+  }
+  const handleCancel = async () => {
+    setUpdatingStatus(true)
+    try {
+      await updateBookingStatus(id!, BookingStatus.CANCELLED)
+      updateStatus?.(id!, BookingStatus.CANCELLED)
+      toast({
+        title: 'success',
+        description: 'Booking cancelled successfully'
+      })
+    } catch (error) {
+      console.error({ error })
+      toast({
+        title: 'error',
+        description: 'Something went wrong'
+      })
+    } finally {
+      setUpdatingStatus(false)
+    }
+  }
+
   return (
-    <div
-      className={`ring-1 ring-black/10 rounded-xl p-4 transition-all duration-300 ${
+    <div className={`ring-1 ring-black/10 rounded-xl p-4 transition-all duration-300 ${
         isExpanded ? 'bg-black/5' : ''
-      }`}
-    >
+      }`}>
       <div className="flex divide-x divide-gray-100">
         <div
           className={`flex flex-col items-center text-gray-400 transition-all duration-300 pl-2 pr-6 ${
             isExpanded ? 'text-black' : ''
-          }`}
-        >
+          }`}>
           <span className="text-xl font-semibold">{dayText}</span>
           <span className="text-4xl font-bold">{dayNumber}</span>
         </div>
@@ -61,17 +106,14 @@ export default function PaymentCard({
         </div>
         <button
           className="bg-gray-50 hover:bg-gray-100 rounded text-gray-400 transition-all duration-300"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
+          onClick={() => setIsExpanded(!isExpanded)}>
           <ChevronDown className={`transition-all duration-300 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
         </button>
       </div>
       
-      <div
-        className={`overflow-hidden font-light transition-all duration-1000 ease-in-out ${
+      <div className={`overflow-hidden font-light transition-all duration-1000 ease-in-out ${
           isExpanded ? 'max-h-[999px]' : 'max-h-0 duration-500'
-        }`}
-      >
+        }`}>
         <div className="pt-3 grid md:grid-cols-2 gap-2">
           <div className="grid md:grid-cols-4 bg-white rounded-lg p-2">
             <span className="text-gray-400">Specialist</span>
@@ -92,15 +134,17 @@ export default function PaymentCard({
             </span>
           </div>
 
-          {isSpecialist && <button
+          {isSpecialist && (status === BookingStatus.PENDING) && <button
+            onClick={handleAccept}
             className="bg-yale-blue text-white rounded-lg p-2
             transition-all duration-300 ease-in-out md:row-start-3">
-            Accept
+            {updatingStatus ? 'Updating...' : 'Accept'}
           </button>}
-          {isPatient && <button
+          {isPatient && (status === BookingStatus.UPCOMING) && <button
+            onClick={handleCancel}
             className="bg-white hover:bg-red-300 rounded-lg p-2 transition-all
             duration-300 ease-in-out md:row-start-3">
-            Cancel
+            {updatingStatus ? 'Updating...' : 'Cancel'}
           </button>}
         </div>
       </div>

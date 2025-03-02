@@ -14,6 +14,7 @@ export type BookingData = {
 
 export enum BookingStatus {
   UPCOMING = 'upcoming',
-  PAST = 'past',
-  CANCELED = 'canceled'
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled'
 }

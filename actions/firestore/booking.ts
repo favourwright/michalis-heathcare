@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { collection, addDoc, Timestamp, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, Timestamp, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 import { BookingData, BookingStatus } from "@/types/booking";
 
 const bookingCollection = "booking"; // where to store user data
@@ -37,3 +37,28 @@ export const fetchUserBookings = async (uid: string): Promise<BookingData[]> => 
 
   return data;
 };
+
+export const fetchAllBookings = async (): Promise<BookingData[]> => {
+  // fetch all bookings that are not completed or canceled
+  const ref = collection(db, bookingCollection);
+  const q = query(ref, where("status", "not-in", [BookingStatus.COMPLETED, BookingStatus.CANCELLED]));
+  const querySnapshot = await getDocs(q);
+
+  const data: BookingData[] = querySnapshot.docs.map((doc) => {
+    const docData = doc.data();
+    return {
+      ...docData,
+      id: doc.id, // Ensure the document ID is included
+      createdAt: docData.createdAt.toDate(), // Convert Firestore Timestamp to Date
+      updatedAt: docData.updatedAt.toDate(),
+      date: docData.date.toDate(),
+    } as BookingData;
+  });
+
+  return data;
+}
+
+export const updateBookingStatus = async (id: string, status: BookingStatus) => {
+  const ref = doc(db, bookingCollection, id);
+  await updateDoc(ref, { status });
+}

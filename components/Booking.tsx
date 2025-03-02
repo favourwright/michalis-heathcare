@@ -2,46 +2,37 @@
 
 import { useState, useMemo } from 'react';
 import moment from 'moment';
-import Link from 'next/link';
-// import { CoinPayment } from '@/types';
-// import { tokens } from '@/utils/constants';
 import { ChevronDown } from 'lucide-react';
+import { BookingData } from '@/types/booking';
+import { Icon } from '@iconify/react';
 
 type PaymentCardProps = {
-  createdAt: Date;
-  amount: number;
-  // token: CoinPayment;
-  requestId: number;
-  sellerId: number;
-  buyerId: number;
-  isSeller: boolean;
-};
+  isSpecialist: boolean
+  isPatient: boolean
+} & Pick<BookingData, 'date' | 'specialization' | 'consultationSummary' | 'meetingLink'>
 
 export default function PaymentCard({
-  createdAt,
-  amount,
-  // token,
-  requestId,
-  sellerId,
-  buyerId,
-  isSeller,
+  date,
+  consultationSummary,
+  specialization,
+  meetingLink,
+  isSpecialist,
+  isPatient
 }: PaymentCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const dayText = useMemo(() => moment(createdAt).format('ddd'), [createdAt]);
-  const dayNumber = useMemo(() => moment(createdAt).format('D'), [createdAt]);
-  // const tokenDetails = useMemo(() => tokens.find((t) => t.symbol === token), [token]);
+  const dayText = useMemo(() => moment(date).format('ddd'), [date]);
+  const dayNumber = useMemo(() => moment(date).format('D'), [date]);
+  
+  const summary = useMemo(() => {
+    return specialization ?
+      `I need to see a ${specialization}` :
+      `Summary: ${consultationSummary}`
+  }, [specialization, consultationSummary]);
 
-  const moreDetails = useMemo(() => {
-    return {
-      amount,
-      // token,
-      request: requestId,
-      'my id': isSeller ? sellerId : buyerId,
-      date: createdAt.toString(),
-    };
-  }, [amount, requestId, sellerId, buyerId, isSeller, createdAt]);
-  // }, [amount, token, requestId, sellerId, buyerId, isSeller, createdAt]);
+  const meetingLinkDetails = useMemo(() => {
+    return meetingLink ? meetingLink : 'Link Not provided yet'
+  }, [meetingLink]);
 
   return (
     <div
@@ -59,36 +50,9 @@ export default function PaymentCard({
           <span className="text-4xl font-bold">{dayNumber}</span>
         </div>
 
-        <div className="flex-1 flex max-md:flex-col">
-          <div className="flex items-center">
-            <span
-              className={`mx-4 h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center opacity-50 ${
-                isExpanded ? 'opacity-100' : ''
-              }`}
-            >
-              logo
-              {/* {tokenDetails?.logo && <img src={tokenDetails.logo} alt="token" className="object-contain h-10" />} */}
-            </span>
-          </div>
-
-          <div className={`flex-1 flex items-center px-3 text-gray-600 ${isExpanded ? 'text-black' : ''}`}>
-            {isSeller ? (
-              <>
-                {/* You got paid {amount} {tokenDetails?.symbol} for request */}
-                You got paid {amount} USDC for request
-                <Link href={`/requests/${requestId}`} className="pl-2 hover:underline">
-                  #{requestId}
-                </Link>
-              </>
-            ) : (
-              <>
-                {/* You paid {amount} {tokenDetails?.symbol} for request */}
-                You paid {amount} USDC for request
-                <Link href={`/requests/${requestId}`} className="pl-2 hover:underline">
-                  #{requestId}
-                </Link>
-              </>
-            )}
+        <div className="flex-1 flex max-md:flex-col items-center px-4">
+          <div className={`flex-1 flex md:px-3 text-gray-600 ${isExpanded ? 'text-black' : ''}`}>
+            <span className='pl-2'>{summary}</span>
           </div>
         </div>
         <button
@@ -105,20 +69,35 @@ export default function PaymentCard({
         }`}
       >
         <div className="pt-3 grid md:grid-cols-2 gap-2">
-          {Object.entries(moreDetails).map(([key, value]) => (
-            <div key={key} className="grid md:grid-cols-4 bg-white rounded-lg p-2">
-              <span className="text-gray-400">{key}</span>
-              <span className="md:col-span-3 text-gray-600">
-                {key === 'request' ? (
-                  <Link href={`/requests/${value}`} className="pl-2 hover:underline">
-                    #{value}
-                  </Link>
-                ) : (
-                  value as string
-                )}
-              </span>
-            </div>
-          ))}
+          <div className="grid md:grid-cols-4 bg-white rounded-lg p-2">
+            <span className="text-gray-400">Specialist</span>
+            <span className="md:col-span-3 text-gray-600">
+              {specialization || 'Not sure yet'}
+            </span>
+          </div>
+          <div className="grid md:grid-cols-4 bg-white rounded-lg p-2">
+            <span className="text-gray-400">Issue Summary</span>
+            <span className="md:col-span-3 text-gray-600">
+              {consultationSummary || 'No summary provided'}
+            </span>
+          </div>
+          <div className="grid md:grid-cols-4 bg-white rounded-lg p-2">
+            <span className="text-gray-400">Meeting</span>
+            <span className="md:col-span-3 text-gray-600 truncate">
+              {meetingLinkDetails}
+            </span>
+          </div>
+
+          {isSpecialist && <button
+            className="bg-yale-blue text-white rounded-lg p-2
+            transition-all duration-300 ease-in-out md:row-start-3">
+            Accept
+          </button>}
+          {isPatient && <button
+            className="bg-white hover:bg-red-300 rounded-lg p-2 transition-all
+            duration-300 ease-in-out md:row-start-3">
+            Cancel
+          </button>}
         </div>
       </div>
     </div>

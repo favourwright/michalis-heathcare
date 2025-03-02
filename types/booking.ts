@@ -5,6 +5,7 @@ export type BookingData = {
   specialization: string | null;
   consultationSummary?: string;
   iKnowWhatImDoing?: boolean;
+  meetingLink?: string;
   date: Date;
   createdAt: Date;
   updatedAt: Date;

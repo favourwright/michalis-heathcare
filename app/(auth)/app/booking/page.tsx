@@ -4,19 +4,30 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Booking from "@/components/Booking"
 import Button from "@/components/common/Button"
 import DefaultMaxWidth from "@/components/common/DefaultMaxWidth"
-
-enum BookingStatus {
-  UPCOMING = 'upcoming',
-  PAST = 'past',
-  CANCELED = 'canceled'
-}
+import useUserStore from "@/stores/user"
+import { BookingStatus, BookingData } from "@/types/booking"
+import { fetchUserBookings } from "@/actions/firestore/booking"
 
 const BookingPage = () => {
   const [activeTab, setActiveTab] = useState(BookingStatus.UPCOMING)
+
+  const { uid } = useUserStore()
+  const [bookings, setBookings] = useState<BookingData[]>([])
+  const filteredBookings = bookings.filter((booking) => booking.status === activeTab)
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    (async ()=>{
+      if(!uid) return
+      setLoading(true)
+      const data = await fetchUserBookings(uid)
+      setBookings(data)
+      setLoading(false)
+    })()
+  }, [uid])
 
   return (
     <div className="w-full">
@@ -45,26 +56,41 @@ const BookingPage = () => {
       </DefaultMaxWidth>
 
       <DefaultMaxWidth withPadding={false} className="mt-4">
-        <BookingList list={[1,2,3]} />
+        {loading && <div className="grid gap-3 relative text-sm">
+          {[1,2,3].map((_,i)=><div
+            key={i}
+            className="w-full h-20 bg-gray-50 border border-gray-200
+            animate-pulse rounded-md">
+          </div>)}
+          <span className="absolute inset-0 flex items-center justify-center text-gray-400 italic font-bold">
+            fetching...
+          </span>
+        </div>}
+        {!loading && filteredBookings.length === 0 && <div className="grid gap-3 relative text-sm">
+          <div className="w-full h-20 bg-gray-50 border border-gray-200 animate-pulse rounded-md"></div>
+          <span className="absolute inset-0 flex items-center justify-center text-gray-400 italic font-bold">
+            No Bookings
+          </span>
+        </div>}
+        {!loading && <BookingList list={filteredBookings} />}
       </DefaultMaxWidth>
     </div>
   )
 }
 
-type BookingItem = {
+const BookingList = ({list}:{list:BookingData[]}) => {
+  const { uid } = useUserStore()
 
-}
-const BookingList = ({list}:{list:BookingItem[]}) => {
   return (
     <div className="grid gap-3">
       {list.map((item,i)=><Booking
         key={i}
-        amount={100}
-        createdAt={new Date()}
-        requestId={i}
-        sellerId={i}
-        buyerId={i}
-        isSeller
+        date={item.date}
+        consultationSummary={item.consultationSummary}
+        specialization={item.specialization}
+        isSpecialist={true}
+        isPatient={item.patient === uid}
+        meetingLink={item.meetingLink}
       />)}
     </div>
   )

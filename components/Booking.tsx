@@ -157,6 +157,12 @@ export default function PaymentCard({
               {meetingLink}
             </a> : <span className="md:col-span-3 text-gray-600">No meeting link</span>}
           </div>
+          <div className="grid md:grid-cols-4 bg-white rounded-lg p-2">
+            <span className="text-gray-400">Date</span>
+            <span className="md:col-span-3 text-gray-600">
+              {date.toLocaleDateString()}
+            </span>
+          </div>
 
           {isSpecialist && (status === BookingStatus.PENDING) && <button
             onClick={handleAccept}

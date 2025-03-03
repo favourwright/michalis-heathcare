@@ -2,7 +2,7 @@ import { db } from "@/firebase";
 import { collection, addDoc, Timestamp, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 import { BookingData, BookingStatus } from "@/types/booking";
 
-const bookingCollection = "booking"; // where to store user data
+const bookingCollection = "booking"; // where to store booking data
 
 export const createBooking = async (
   booking: Omit<BookingData, 'id' | 'createdAt' | 'updatedAt' | 'specialist' | 'status'>
